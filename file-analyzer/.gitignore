@@ -1,0 +1,10 @@
+# Never commit your API keys!
+backend/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+uploads/
+outputs/
+*.zip
