@@ -5,21 +5,52 @@ import { useAuth } from '../context/AuthContext'
 export default function StudentLoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [rollNo, setRollNo]     = useState('')
+  const [rollNo, setRollNo] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError]       = useState('')
-  const [loading, setLoading]   = useState(false)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e) {
+  const fetchLogin = async (studentId, password) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/login/student", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ studentId, password })
+      });
+      let data = {};
+      try {
+        data = await res.json(); // try parsing JSON
+      } catch {
+        data = {}; // fallback if no JSON returned
+      }
+      return { status: res.status, data };
+
+    } catch (err) {
+      console.log(err);
+      return 500;
+    }
+  }
+
+  async function handleSubmit(e) {
+
     e.preventDefault()
-    setLoading(true); setError('')
-    const result = login(rollNo, password)
-    if (result.success && result.role === 'student') {
+    setLoading(true);
+    setError('');
+    const res = await fetchLogin(rollNo, password);
+    console.log(res.status)
+    if (res.status == 200) {
+      login({
+        studentId: rollNo,
+        role: 'student',
+        ...res.data
+      })
       navigate('/dashboard')
-    } else if (result.success && result.role === 'admin') {
-      setError('This is an admin account. Please use Admin Login.')
-    } else {
+    } else if (res.status == 401) {
       setError('Invalid Roll No or Password.')
+    } else if (res.status == 404) {
+      setError('Student not Found.')
+    } else {
+      setError(res.data.message || 'Something went wrong');
     }
     setLoading(false)
   }
@@ -44,7 +75,7 @@ export default function StudentLoginPage() {
           <div className="flex items-center gap-3 mb-7">
             <img src="/jntugv-logo.jpg" alt="JNTUGV"
               className="w-11 h-11 object-contain rounded-full border border-slate-200"
-              onError={e => e.target.style.display='none'} />
+              onError={e => e.target.style.display = 'none'} />
             <div>
               <div className="text-sm font-extrabold text-emerald-700 leading-tight">JNTUGV SmartLib</div>
               <div className="text-[10px] text-slate-400 uppercase tracking-widest">Student Login</div>
@@ -99,7 +130,7 @@ export default function StudentLoginPage() {
         <div className="mt-5 bg-emerald-600 rounded-2xl p-6 text-white">
           <div className="text-sm font-bold mb-3 text-emerald-100 uppercase tracking-widest">What you can do</div>
           <div className="grid grid-cols-2 gap-3">
-            {[['📚','View borrowed books'],['🔄','Renew before due date'],['💰','Check your fines'],['🔔','Get reminders']].map(([icon, label]) => (
+            {[['📚', 'View borrowed books'], ['🔄', 'Renew before due date'], ['💰', 'Check your fines'], ['🔔', 'Get reminders']].map(([icon, label]) => (
               <div key={label} className="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2.5">
                 <span className="text-lg">{icon}</span>
                 <span className="text-xs font-medium text-emerald-100">{label}</span>

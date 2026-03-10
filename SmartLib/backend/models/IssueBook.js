@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const IssueBookSchema = new mongoose.Schema({
     studentId: {
@@ -20,8 +20,9 @@ const IssueBookSchema = new mongoose.Schema({
     returned: {
         type: Boolean,
         default: false
-    }},
-    { timestamps: true }
+    }
+},
+{ timestamps: true }
 );
 
-module.exports=mongoose.model('IssuedBooks',IssueBookSchema);
+export default mongoose.model('IssuedBooks', IssueBookSchema);

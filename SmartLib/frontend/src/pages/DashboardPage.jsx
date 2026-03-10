@@ -5,7 +5,6 @@ import StatsRow from '../components/StatsRow'
 import BooksTable from '../components/BooksTable'
 import IssueForm from '../components/IssueForm'
 
-// ── Placeholder pages for menu items not yet built ──
 function ComingSoon({ icon, title }) {
   return (
     <div className="flex flex-col items-center justify-center h-64 text-center">
@@ -35,14 +34,10 @@ function ProfileTab({ user }) {
         </div>
         <div className="space-y-4">
           {[
-            ['ID',       user.id || user.username],
-            ['Name',     user.name],
-            ...(user.role === 'student' ? [
-              ['Branch',   user.branch],
-              ['Year',     user.year],
-            ] : [
-              ['Role',     'System Librarian'],
-            ]),
+            ['Student ID', user.studentId],
+            ['Name',       user.name],
+            ['Mobile',     user.mobile],
+            ['Role',       user.role],
           ].map(([label, val]) => (
             <div key={label} className="flex items-center justify-between py-3 border-b border-slate-100 last:border-none">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">{label}</span>
@@ -85,8 +80,8 @@ function SupportTab() {
 
 export default function DashboardPage() {
   const { user } = useAuth()
-  const [tab, setTab]           = useState('dashboard')
-  const [search, setSearch]     = useState('')
+  const [tab, setTab]               = useState('dashboard')
+  const [search, setSearch]         = useState('')
   const [refreshKey, setRefreshKey] = useState(0)
 
   function handleIssued() { setRefreshKey(k => k + 1); setTab('books') }
@@ -111,10 +106,10 @@ export default function DashboardPage() {
       if (tab === 'issue')    return <IssueForm onIssued={handleIssued} />
       if (tab === 'overdue')  return <ComingSoon icon="⚠️"  title="Overdue Books" />
       if (tab === 'catalog')  return <ComingSoon icon="🗂️"  title="Book Catalog" />
-      if (tab === 'students') return <ComingSoon icon="🎓" title="Student Records" />
+      if (tab === 'students') return <ComingSoon icon="🎓"  title="Student Records" />
       if (tab === 'profile')  return <ProfileTab user={user} />
       if (tab === 'support')  return <SupportTab />
-      if (tab === 'settings') return <ComingSoon icon="⚙️" title="Settings" />
+      if (tab === 'settings') return <ComingSoon icon="⚙️"  title="Settings" />
     }
 
     // ── STUDENT tabs ──
@@ -126,7 +121,7 @@ export default function DashboardPage() {
           </div>
           <div>
             <div className="text-sm font-bold text-slate-800">Welcome back, {user.name}!</div>
-            <div className="text-xs text-slate-500">{user.branch} · {user.year} · ID: {user.id}</div>
+            <div className="text-xs text-slate-500">ID: {user.studentId} · 📱 {user.mobile}</div>
           </div>
         </div>
         <BooksTable search="" refreshKey={refreshKey} />
