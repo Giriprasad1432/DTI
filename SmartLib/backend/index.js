@@ -1,6 +1,7 @@
 import express from 'express';
 import connectDB from './config/db.js';
 import StudentRoutes from './routes/StudentRoutes.js';
+import AdminRoutes from './routes/AdminRoutes.js'
 import cors from "cors";
 const app = express();
 const port = 5000;
@@ -13,7 +14,8 @@ app.use(cors({
   methods: ["POST", "GET"]
 }));
 
-app.use('/api',StudentRoutes);
+app.use('/api/student',StudentRoutes);
+app.use('/api/admin',AdminRoutes)
 
 app.listen(port, () => {
     console.log('backend running on port 5000');

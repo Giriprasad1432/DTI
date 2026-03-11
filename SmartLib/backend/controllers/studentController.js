@@ -1,3 +1,4 @@
+import studentAuth from "../models/StudentAuth.js";
 import Students from "../models/students.js";
 import bcrypt from "bcryptjs";
 
@@ -8,7 +9,7 @@ const studentLogin = async (req, res) => {
       return res.status(400).json({ message: "Student ID and password are required" });
     }
 
-    const student = await Students.findOne({ studentId });
+    const student = await studentAuth.findOne({ studentId });
     if (!student) {
       return res.status(404).json({ message: "Student not found" });
     }
@@ -21,9 +22,17 @@ const studentLogin = async (req, res) => {
     if (!match) {
       return res.status(401).json({ message: "Invalid password" });
     }
-    const studentData = student.toObject()
-    delete studentData.password
+    const studentDetails = await Students.findOne({ studentId });
+    let studentData={};
+    if (studentDetails) {
+      studentData = studentDetails.toObject();
+      delete studentData.password;
+    }
+    else{
+      console.log("Students not completely registered..");
+    }
     res.status(200).json({ message: "Login Successful", ...studentData });
+    
   } catch (err) {
     console.log(err.message);
     res.status(500).json({ message: "Server error" });

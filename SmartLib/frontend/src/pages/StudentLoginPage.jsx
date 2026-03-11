@@ -12,7 +12,7 @@ export default function StudentLoginPage() {
 
   const fetchLogin = async (studentId, password) => {
     try {
-      const res = await fetch("http://localhost:3000/api/login/student", {
+      const res = await fetch("http://localhost:3000/api/student/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ studentId, password })

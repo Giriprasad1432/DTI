@@ -10,19 +10,67 @@ export default function AdminLoginPage() {
   const [error, setError]       = useState('')
   const [loading, setLoading]   = useState(false)
 
-  function handleSubmit(e) {
+
+
+    const fetchLogin = async (adminId, password) => {
+    try {
+      const res = await fetch("http://localhost:3000/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ adminId, password })
+      });
+      let data = {};
+      try {
+        data = await res.json(); // try parsing JSON
+      } catch {
+        data = {}; // fallback if no JSON returned
+      }
+      return { status: res.status, data };
+
+    } catch (err) {
+      console.log(err);
+      return 500;
+    }
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault()
-    setLoading(true); setError('')
-    const result = login(adminId, password)
-    if (result.success && result.role === 'admin') {
+    setLoading(true);
+    setError('');
+    const res = await fetchLogin(adminId, password);
+    console.log(res.status)
+    if (res.status == 200) {
+      login({
+        adminId: adminId,
+        role: 'admin',
+        ...res.data
+      })
       navigate('/dashboard')
-    } else if (result.success && result.role === 'student') {
-      setError('This is a student account. Please use Student Login.')
+    } else if (res.status == 401) {
+      setError('Invalid Roll No or Password.')
+    } else if (res.status == 404) {
+      setError('admin not Found.')
     } else {
-      setError('Invalid Admin ID or Password.')
+      setError(res.data.message || 'Something went wrong');
     }
     setLoading(false)
   }
+
+
+
+  // function handleSubmit(e) {
+  //   e.preventDefault()
+  //   setLoading(true); setError('')
+  //   const result = login(adminId, password)
+  //   if (result.success && result.role === 'admin') {
+  //     navigate('/dashboard')
+  //   } else if (result.success && result.role === 'admin') {
+  //     setError('This is a admin account. Please use admin Login.')
+  //   } else {
+  //     setError('Invalid Admin ID or Password.')
+  //   }
+  //   setLoading(false)
+  // }
 
   const inp = "w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400"
 
@@ -81,8 +129,8 @@ export default function AdminLoginPage() {
 
           {/* Switch */}
           <div className="mt-5 text-center text-sm text-slate-400">
-            Student?{' '}
-            <Link to="/login/student" className="text-emerald-600 font-bold hover:underline">Student Login →</Link>
+            admin?{' '}
+            <Link to="/login/admin" className="text-emerald-600 font-bold hover:underline">admin Login →</Link>
           </div>
 
           {/* Demo */}
