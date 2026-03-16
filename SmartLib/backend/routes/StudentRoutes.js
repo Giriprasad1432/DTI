@@ -1,7 +1,7 @@
 import express from 'express';
 import Students from '../models/students.js';
 import studentAuth from '../models/StudentAuth.js';
-import studentLogin from '../controllers/studentController.js';
+import studentLogin, { getMyBooks, getMyFines, getBorrowHistory } from '../controllers/studentController.js';
 
 const router = express.Router();
 
@@ -29,6 +29,15 @@ router.post('/register', async (req, res) => {
     }
 });
 
-router.post('/login',studentLogin)
+router.post('/login',studentLogin);
+
+// GET /api/student/books/my - Get student's borrowed books
+router.get('/books/my', getMyBooks);
+
+// GET /api/student/fines/my - Get student's fines
+router.get('/fines/my', getMyFines);
+
+// GET /api/student/history - Get student's borrow history
+router.get('/history', getBorrowHistory);
 
 export default router;

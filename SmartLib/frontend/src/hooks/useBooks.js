@@ -13,7 +13,7 @@ export function useBooks({ role, studentId, search }) {
       const data = await fetchBooks({ role, studentId, search })
       setBooks(data)
     } catch (e) {
-      setError('Cannot reach server. Is Flask running on port 5000?')
+      setError('Cannot reach server. Is the backend server running on port 5000?')
     } finally {
       setLoading(false)
     }

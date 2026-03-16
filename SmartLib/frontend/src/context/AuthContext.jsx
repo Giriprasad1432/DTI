@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react'
+import { logoutUser } from '../api/books'
 
 const AuthContext = createContext(null)
 
@@ -13,7 +14,12 @@ export function AuthProvider({ children }) {
     localStorage.setItem('sl_user', JSON.stringify(userData))
   }
 
-  function logout() {
+  async function logout() {
+    try {
+      await logoutUser()
+    } catch (e) {
+      // Ignore logout API errors
+    }
     setUser(null)
     localStorage.removeItem('sl_user')
     sessionStorage.removeItem('sl_token')

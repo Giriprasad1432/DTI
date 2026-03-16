@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const IssueBookSchema = new mongoose.Schema({
+const ReservationSchema = new mongoose.Schema({
     studentId: {
         type: String,
         required: true
@@ -29,29 +29,19 @@ const IssueBookSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    issuedDate: {
+    reservationDate: {
         type: Date,
         default: Date.now
     },
-    dueDate: {
+    status: {
+        type: String,
+        enum: ['active', 'fulfilled', 'expired'],
+        default: 'active'
+    },
+    expiryDate: {
         type: Date,
-        default: () => new Date(Date.now() + 14 * 24 * 60 * 60 * 1000) // 14 days from now
-    },
-    returned: {
-        type: Boolean,
-        default: false
-    },
-    returnedDate: {
-        type: Date
-    },
-    renewedCount: {
-        type: Number,
-        default: 0
-    },
-    fine: {
-        type: Number,
-        default: 0
+        default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
     }
 }, { timestamps: true });
 
-export default mongoose.model('IssuedBooks', IssueBookSchema);
+export default mongoose.model('Reservation', ReservationSchema);

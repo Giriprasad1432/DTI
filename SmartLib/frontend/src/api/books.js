@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// All requests proxy through Vite → Flask at localhost:5000
+// All requests proxy through Vite → Node.js/Express server at localhost:5000
 const api = axios.create({ baseURL: '/api' })
 
 // ── Interceptor: attach token if stored (for future JWT auth) ──
@@ -14,15 +14,15 @@ api.interceptors.request.use(cfg => {
 //  AUTH
 // ════════════════════════════════════════════
 
-// POST /api/auth/student/login  { roll_no, password }
+// POST /api/student/login  { roll_no, password }
 export async function loginStudent({ rollNo, password }) {
-  const res = await api.post('/auth/student/login', { roll_no: rollNo, password })
+  const res = await api.post('/student/login', { roll_no: rollNo, password })
   return res.data   // expects { success, token, user: { id, name, branch, year, role } }
 }
 
-// POST /api/auth/admin/login  { admin_id, password }
+// POST /api/admin/login  { admin_id, password }
 export async function loginAdmin({ adminId, password }) {
-  const res = await api.post('/auth/admin/login', { admin_id: adminId, password })
+  const res = await api.post('/admin/login', { admin_id: adminId, password })
   return res.data   // expects { success, token, user: { id, name, role } }
 }
 
@@ -75,6 +75,40 @@ export async function fetchFine(id) {
   return res.data   // { fine: 0 }
 }
 
+// GET /api/book/:bookId
+export async function getBookById(bookId) {
+  const res = await api.get(`/book/${bookId}`)
+  return res.data   // { book_id, title, author, category, total_copies, available_copies }
+}
+
+// GET /api/student/:studentId
+export async function getStudentById(studentId) {
+  const res = await api.get(`/student/${studentId}`)
+  return res.data   // { student_id, name, mobile, branch, year }
+}
+// ════════════════════════════════════════════
+//  RESERVATIONS
+// ════════════════════════════════════════════
+
+// POST /api/reserve  { book_no, book_name, student_no, student_name, mobile, branch, year }
+export async function reserveBook(payload) {
+  const res = await api.post('/reserve', payload)
+  return res.data   // { success, id } or { error }
+}
+
+// GET /api/reservations?role=&student_id=&search=
+export async function fetchReservations({ role, studentId, search = '' }) {
+  const res = await api.get('/reservations', {
+    params: { role, student_id: studentId, search }
+  })
+  return res.data   // [ { id, book_id, title, student, student_id, branch, year, reservation_date, expiry_date, status, mobile } ]
+}
+
+// POST /api/reservations/:id/fulfill
+export async function fulfillReservation(id) {
+  const res = await api.post(`/reservations/${id}/fulfill`)
+  return res.data   // { success, issued_book_id } or { error }
+}
 // ════════════════════════════════════════════
 //  STUDENT — specific
 // ════════════════════════════════════════════
@@ -113,20 +147,20 @@ export async function fetchOverdueBooks() {
   return res.data
 }
 
-// GET /api/catalog?search=&page=
+// GET /api/admin/catalog?search=&page=
 export async function fetchCatalog({ search = '', page = 1 } = {}) {
-  const res = await api.get('/catalog', { params: { search, page } })
+  const res = await api.get('/admin/catalog', { params: { search, page } })
   return res.data
 }
 
-// POST /api/catalog  { book_id, title, author, category, total_copies }
+// POST /api/admin/catalog  { book_id, title, author, category, total_copies }
 export async function addBookToCatalog(payload) {
-  const res = await api.post('/catalog', payload)
+  const res = await api.post('/admin/catalog', payload)
   return res.data
 }
 
-// DELETE /api/catalog/:id
+// DELETE /api/admin/catalog/:id
 export async function deleteFromCatalog(id) {
-  const res = await api.delete(`/catalog/${id}`)
+  const res = await api.delete(`/admin/catalog/${id}`)
   return res.data
 }

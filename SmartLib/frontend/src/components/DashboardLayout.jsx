@@ -16,6 +16,7 @@ const ADMIN_MENU = [
   { id: 'dashboard', icon: '📊', label: 'Dashboard' },
   { id: 'books',     icon: '📚', label: 'Issued Books' },
   { id: 'issue',     icon: '➕', label: 'Issue Book' },
+  { id: 'reservations', icon: '📋', label: 'Reservations' },
   { id: 'overdue',   icon: '⚠️',  label: 'Overdue' },
   { id: 'catalog',   icon: '🗂️',  label: 'Catalog' },
   { id: 'students',  icon: '🎓', label: 'Students' },

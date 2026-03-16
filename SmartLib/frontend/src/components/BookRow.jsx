@@ -36,11 +36,13 @@ export default function BookRow({ book, onRefresh }) {
   const statusCls =
     book.status === 'overdue'  ? 'bg-red-100 text-red-700' :
     book.status === 'due_soon' ? 'bg-amber-100 text-amber-700' :
+    book.status === 'returned' ? 'bg-slate-100 text-slate-700' :
                                   'bg-emerald-100 text-emerald-700'
 
   const statusLabel =
     book.status === 'overdue'  ? `${Math.abs(book.days_left)}d overdue` :
-    book.status === 'due_soon' ? `${book.days_left}d left` : `${book.days_left}d left`
+    book.status === 'due_soon' ? `${book.days_left}d left` :
+    book.status === 'returned' ? 'Returned' : `${book.days_left}d left`
 
   return (
     <tr className="border-b border-slate-100 last:border-none hover:bg-slate-50/60 transition-colors">
@@ -59,11 +61,13 @@ export default function BookRow({ book, onRefresh }) {
 
       {/* Due Date */}
       <td className="px-7 py-4">
-        <div className="font-medium text-slate-700 text-sm mb-1">{book.due_date}</div>
+        <div className="font-medium text-slate-700 text-sm mb-1">
+          {book.status === 'returned' ? book.returned_date : book.due_date}
+        </div>
         <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${statusCls}`}>
           {statusLabel}
         </span>
-        {fine !== null && <div className="text-xs font-bold text-red-600 mt-1">Fine: ₹{fine}</div>}
+        {book.fine > 0 && <div className="text-xs font-bold text-red-600 mt-1">Fine: ₹{book.fine}</div>}
       </td>
 
       {/* Actions */}
@@ -71,7 +75,7 @@ export default function BookRow({ book, onRefresh }) {
         {/* Renewal dots */}
         <div className="flex items-center gap-1 mb-2">
           <span className="text-[10px] text-slate-400 mr-1">Renewals:</span>
-          {[0, 1].map(i => (
+          {[0, 1, 2].map(i => (
             <span key={i} className={`w-2 h-2 rounded-full inline-block ${i < book.renewed_count ? 'bg-indigo-500' : 'bg-slate-200'}`} />
           ))}
         </div>
@@ -79,21 +83,23 @@ export default function BookRow({ book, onRefresh }) {
           {user.role === 'student' && (
             <button
               onClick={handleRenew}
-              disabled={book.renewed_count >= 2}
+              disabled={book.renewed_count >= 3 || book.status === 'returned'}
               className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {book.renewed_count >= 2 ? 'Max Renewed' : 'Renew +7d'}
+              {book.renewed_count >= 3 ? 'Max Renewed' : book.status === 'returned' ? 'Returned' : 'Renew +7d'}
             </button>
           )}
           {user.role === 'admin' && (
             <>
               <button onClick={handleRenew}
-                className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all">
-                Renew
+                disabled={book.renewed_count >= 3 || book.status === 'returned'}
+                className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                {book.renewed_count >= 3 ? 'Max Renewed' : book.status === 'returned' ? 'Returned' : 'Renew'}
               </button>
               <button onClick={handleReturn}
-                className="text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all">
-                Return
+                disabled={book.status === 'returned'}
+                className="text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
+                {book.status === 'returned' ? 'Returned' : 'Return'}
               </button>
               <button onClick={handleWhatsApp}
                 className="text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all">

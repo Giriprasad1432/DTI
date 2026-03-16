@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { loginAdmin } from '../api/books'
 
 export default function AdminLoginPage() {
   const { login } = useAuth()
@@ -12,46 +13,30 @@ export default function AdminLoginPage() {
 
 
 
-    const fetchLogin = async (adminId, password) => {
-    try {
-      const res = await fetch("http://localhost:3000/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ adminId, password })
-      });
-      let data = {};
-      try {
-        data = await res.json(); // try parsing JSON
-      } catch {
-        data = {}; // fallback if no JSON returned
-      }
-      return { status: res.status, data };
 
-    } catch (err) {
-      console.log(err);
-      return 500;
-    }
-  }
 
   async function handleSubmit(e) {
     e.preventDefault()
     setLoading(true);
     setError('');
-    const res = await fetchLogin(adminId, password);
-    console.log(res.status)
-    if (res.status == 200) {
+    try {
+      const data = await loginAdmin({ adminId, password });
       login({
         adminId: adminId,
         role: 'admin',
-        ...res.data
+        ...data.user
       })
       navigate('/dashboard')
-    } else if (res.status == 401) {
-      setError('Invalid Roll No or Password.')
-    } else if (res.status == 404) {
-      setError('admin not Found.')
-    } else {
-      setError(res.data.message || 'Something went wrong');
+    } catch (err) {
+      if (err.response?.status === 400) {
+        setError('Admin ID and password are required.')
+      } else if (err.response?.status === 401) {
+        setError('Invalid Admin ID or Password.')
+      } else if (err.response?.status === 404) {
+        setError('Admin not found.')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
     }
     setLoading(false)
   }
@@ -134,10 +119,10 @@ export default function AdminLoginPage() {
           </div>
 
           {/* Demo */}
-          <div className="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed">
+          {/* <div className="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed">
             <div className="font-bold text-slate-600 mb-1.5">Demo Account</div>
             <div><code className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded font-mono">admin_lib</code> / <code className="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded font-mono">admin789</code></div>
-          </div>
+          </div> */}
         </div>
 
         {/* Info panel — below the card */}

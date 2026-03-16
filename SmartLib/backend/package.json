@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "seed": "node seeds/books.seed.js",
+    "seed-students": "node seeds/students.seed.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

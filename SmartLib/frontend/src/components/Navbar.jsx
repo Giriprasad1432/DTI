@@ -34,12 +34,12 @@ export default function Navbar() {
       
         <Link to="/login/student"
           className={`flex items-center gap-1.5 text-sm font-semibold text-emerald-700 border border-emerald-200 shadow-md shadow-emerald-100 px-4 py-2 rounded-lg transition-all
-          ${isActive('/login/student') ? 'bg-emerald-300': 'hover:bg-emerald-50 hover:border-emerald-400' }`}>
+          ${isActive('/login/student') ? ' bg-emerald-500 text-white': 'hover:bg-emerald-50 hover:border-emerald-400' }`}>
           <span className="text-base">🎓</span> Student
         </Link>
         <Link to="/login/admin"
           className={`flex border border-indigo-300 items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all shadow-md shadow-indigo-200 hover:-translate-y-0.5
-           ${isActive('/login/admin') ? 'bg-indigo-600 text-white': 'text-slate-500 hover:bg-indigo-100  hover:border-indigo-700 ' }`}>
+           ${isActive('/login/admin') ? 'bg-indigo-600 text-white': 'text-slate-500 hover:bg-indigo-100 ' }`}>
           <span className="text-base">🔑</span> Admin
         </Link>
         <Link to={'/about'} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all

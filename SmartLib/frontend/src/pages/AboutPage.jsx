@@ -15,7 +15,7 @@ export default function AboutPage() {
         {[
           ['🎯','Problem','Students forget return dates, accumulate fines, and librarians spend hours on manual tracking.'],
           ['💡','Solution','A centralized portal with due date tracking, one-click renewals, and WhatsApp reminders.'],
-          ['🛠','Tech Stack','React + Vite (frontend), Flask + MongoDB (backend).'],
+          ['🛠','Tech Stack','React + Vite (frontend), Node.js + Express + MongoDB (backend).'],
           ['👥','Users','B.Tech students across all branches and years, plus library admin staff.'],
         ].map(([icon,title,desc]) => (
           <div key={title} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all">

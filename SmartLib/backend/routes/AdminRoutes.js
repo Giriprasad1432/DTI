@@ -1,7 +1,13 @@
 import express from 'express';
 import Admin from '../models/admin.js';
 import adminAuth from '../models/AdminAuth.js';
-import adminLogin from '../controllers/adminController.js';
+import adminLogin, {
+  getAllStudents,
+  getOverdueBooks,
+  getCatalog,
+  addBookToCatalog,
+  deleteFromCatalog
+} from '../controllers/adminController.js';
 
 const router = express.Router();
 
@@ -29,6 +35,21 @@ router.post('/register', async (req, res) => {
     }
 });
 
-router.post('/login',adminLogin)
+router.post('/login', adminLogin);
+
+// GET /api/admin/students - Get all students
+router.get('/students', getAllStudents);
+
+// GET /api/admin/overdue - Get overdue books
+router.get('/overdue', getOverdueBooks);
+
+// GET /api/admin/catalog - Get book catalog
+router.get('/catalog', getCatalog);
+
+// POST /api/admin/catalog - Add book to catalog
+router.post('/catalog', addBookToCatalog);
+
+// DELETE /api/admin/catalog/:id - Delete book from catalog
+router.delete('/catalog/:id', deleteFromCatalog);
 
 export default router;

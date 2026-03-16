@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { loginStudent } from '../api/books'
 
 export default function StudentLoginPage() {
   const { login } = useAuth()
@@ -10,47 +11,30 @@ export default function StudentLoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const fetchLogin = async (studentId, password) => {
-    try {
-      const res = await fetch("http://localhost:3000/api/student/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ studentId, password })
-      });
-      let data = {};
-      try {
-        data = await res.json(); // try parsing JSON
-      } catch {
-        data = {}; // fallback if no JSON returned
-      }
-      return { status: res.status, data };
 
-    } catch (err) {
-      console.log(err);
-      return 500;
-    }
-  }
 
   async function handleSubmit(e) {
-
     e.preventDefault()
     setLoading(true);
     setError('');
-    const res = await fetchLogin(rollNo, password);
-    console.log(res.status)
-    if (res.status == 200) {
+    try {
+      const data = await loginStudent({ rollNo, password });
       login({
         studentId: rollNo,
         role: 'student',
-        ...res.data
+        ...data.user
       })
       navigate('/dashboard')
-    } else if (res.status == 401) {
-      setError('Invalid Roll No or Password.')
-    } else if (res.status == 404) {
-      setError('Student not Found.')
-    } else {
-      setError(res.data.message || 'Something went wrong');
+    } catch (err) {
+      if (err.response?.status === 400) {
+        setError('Roll No and password are required.')
+      } else if (err.response?.status === 401) {
+        setError('Invalid Roll No or Password.')
+      } else if (err.response?.status === 404) {
+        setError('Student not found.')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
     }
     setLoading(false)
   }
@@ -117,13 +101,13 @@ export default function StudentLoginPage() {
           </div>
 
           {/* Demo */}
-          <div className="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed">
+          {/* <div className="mt-5 p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-400 leading-relaxed">
             <div className="font-bold text-slate-600 mb-1.5">Demo Accounts</div>
             <div className="flex flex-col gap-1">
               <div><code className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-mono">student001</code> / <code className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-mono">pass123</code></div>
               <div><code className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-mono">student002</code> / <code className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-mono">pass456</code></div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Info panel — below the card */}

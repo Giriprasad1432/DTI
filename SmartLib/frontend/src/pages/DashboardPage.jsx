@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import DashboardLayout from '../components/DashboardLayout'
 import StatsRow from '../components/StatsRow'
 import BooksTable from '../components/BooksTable'
+import CatalogTable from '../components/CatalogTable'
 import IssueForm from '../components/IssueForm'
 
 function ComingSoon({ icon, title }) {
@@ -83,8 +84,14 @@ export default function DashboardPage() {
   const [tab, setTab]               = useState('dashboard')
   const [search, setSearch]         = useState('')
   const [refreshKey, setRefreshKey] = useState(0)
+  const [catalogPage, setCatalogPage] = useState(1)
 
   function handleIssued() { setRefreshKey(k => k + 1); setTab('books') }
+
+  // Reset catalog page when search changes
+  useEffect(() => {
+    setCatalogPage(1)
+  }, [search])
 
   function renderContent() {
     // ── ADMIN tabs ──
@@ -104,8 +111,20 @@ export default function DashboardPage() {
       )
       if (tab === 'books')    return <BooksTable search={search} refreshKey={refreshKey} />
       if (tab === 'issue')    return <IssueForm onIssued={handleIssued} />
+      if (tab === 'reservations') return <ComingSoon icon="📋" title="Book Reservations" />
       if (tab === 'overdue')  return <ComingSoon icon="⚠️"  title="Overdue Books" />
-      if (tab === 'catalog')  return <ComingSoon icon="🗂️"  title="Book Catalog" />
+      if (tab === 'catalog')  return (
+        <>
+          <div className="relative mb-6">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+            <input
+              className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-sm transition-all placeholder:text-slate-400"
+              placeholder="Search by Book ID, Title, Author..."
+              value={search} onChange={e => setSearch(e.target.value)} />
+          </div>
+          <CatalogTable search={search} page={catalogPage} onPageChange={setCatalogPage} />
+        </>
+      )
       if (tab === 'students') return <ComingSoon icon="🎓"  title="Student Records" />
       if (tab === 'profile')  return <ProfileTab user={user} />
       if (tab === 'support')  return <SupportTab />
