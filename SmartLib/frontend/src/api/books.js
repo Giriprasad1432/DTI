@@ -113,21 +113,21 @@ export async function fulfillReservation(id) {
 //  STUDENT — specific
 // ════════════════════════════════════════════
 
-// GET /api/books/my?student_id=
+// GET /api/student/books/my?student_id=
 export async function fetchMyBooks(studentId) {
-  const res = await api.get('/books/my', { params: { student_id: studentId } })
+  const res = await api.get('/student/books/my', { params: { student_id: studentId } })
   return res.data
 }
 
-// GET /api/fines/my?student_id=
+// GET /api/student/fines/my?student_id=
 export async function fetchMyFines(studentId) {
-  const res = await api.get('/fines/my', { params: { student_id: studentId } })
+  const res = await api.get('/student/fines/my', { params: { student_id: studentId } })
   return res.data   // { total_fine, books: [ { id, title, fine } ] }
 }
 
-// GET /api/history?student_id=
+// GET /api/student/history?student_id=
 export async function fetchBorrowHistory(studentId) {
-  const res = await api.get('/history', { params: { student_id: studentId } })
+  const res = await api.get('/student/history', { params: { student_id: studentId } })
   return res.data   // [ { title, issued_on, returned_on } ]
 }
 
@@ -163,4 +163,41 @@ export async function addBookToCatalog(payload) {
 export async function deleteFromCatalog(id) {
   const res = await api.delete(`/admin/catalog/${id}`)
   return res.data
+}
+
+// ════════════════════════════════════════════
+//  NOTIFICATIONS
+// ════════════════════════════════════════════
+
+export async function fetchNotifications(studentId) {
+  const res = await api.get('/notifications', { params: { studentId } })
+  return res.data   // { notifications: [], unreadCount: 0 }
+}
+
+export async function markNotificationRead(id) {
+  const res = await api.put(`/notifications/${id}/read`)
+  return res.data
+}
+
+export async function sendAdminMessage(studentId, message) {
+  const res = await api.post('/notifications/admin/send', { studentId, message })
+  return res.data
+}
+
+// ════════════════════════════════════════════
+//  SETTINGS
+// ════════════════════════════════════════════
+
+export async function updateProfile({ role, userId, name, email, mobile, branch, year }) {
+  const endpoint = role === 'admin' ? '/admin/update-profile' : '/student/update-profile';
+  const idField = role === 'admin' ? 'adminId' : 'studentId';
+  const res = await api.put(endpoint, { [idField]: userId, name, email, mobile, branch, year });
+  return res.data;
+}
+
+export async function changePassword({ role, userId, currentPassword, newPassword }) {
+  const endpoint = role === 'admin' ? '/admin/change-password' : '/student/change-password';
+  const idField = role === 'admin' ? 'adminId' : 'studentId';
+  const res = await api.put(endpoint, { [idField]: userId, currentPassword, newPassword });
+  return res.data;
 }

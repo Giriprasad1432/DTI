@@ -3,11 +3,17 @@ import { useBooks } from '../hooks/useBooks'
 import BookRow from './BookRow'
 import { BookOpen, AlertTriangle } from 'lucide-react'
 
-export default function BooksTable({ search, refreshKey }) {
+export default function BooksTable({ search, refreshKey, onAction }) {
   const { user } = useAuth()
   const { books, loading, error, reload } = useBooks({
     role: user.role, studentId: user.id, search, _key: refreshKey,
   })
+
+  function handleRefresh() {
+    reload()
+    if (onAction) onAction()
+  }
+
   const overdueCount = books.filter(b => b.status === 'overdue').length
   const title = user.role === 'admin'
     ? (overdueCount > 0 ? <><AlertTriangle className="w-4 h-4 inline" /> {overdueCount} Overdue · </> : '') + 'All Issued Books'
@@ -41,7 +47,7 @@ export default function BooksTable({ search, refreshKey }) {
               </tr>
             </thead>
             <tbody>
-              {books.map(book => <BookRow key={book.id} book={book} onRefresh={reload} />)}
+              {books.map(book => <BookRow key={book.id} book={book} onRefresh={handleRefresh} />)}
             </tbody>
           </table>
         </div>

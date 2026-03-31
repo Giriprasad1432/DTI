@@ -48,7 +48,8 @@ const studentLogin = async (req, res) => {
         branch: studentData.branch || "CSE",
         year: studentData.year || "1st Year",
         role: "student",
-        mobile: studentData.mobile
+        mobile: studentData.mobile,
+        email: studentData.email || ""
       }
     });
 

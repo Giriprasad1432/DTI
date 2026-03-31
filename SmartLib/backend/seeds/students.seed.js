@@ -5,14 +5,14 @@ import Students from '../models/students.js'
 dotenv.config()
 
 const students = [
-  { studentId: '21CSE001', name: 'Alice Johnson', mobile: '9876543210' },
-  { studentId: '21CSE002', name: 'Bob Smith', mobile: '9876543211' },
-  { studentId: '21ECE001', name: 'Charlie Brown', mobile: '9876543212' },
-  { studentId: '21MECH001', name: 'Diana Prince', mobile: '9876543213' },
-  { studentId: '21CIVIL001', name: 'Eve Wilson', mobile: '9876543214' },
-  { studentId: '21EEE001', name: 'Frank Miller', mobile: '9876543215' },
-  { studentId: '21IT001', name: 'Grace Lee', mobile: '9876543216' },
-  { studentId: '21MET001', name: 'Henry Davis', mobile: '9876543217' },
+  { studentId: '21CSE001', name: 'Alice Johnson', email: 'alice.dummy@example.com', mobile: '9876543210' },
+  { studentId: '21CSE002', name: 'Bob Smith', email: 'bob.dummy@example.com', mobile: '9876543211' },
+  { studentId: '21ECE001', name: 'Charlie Brown', email: 'charlie.dummy@example.com', mobile: '9876543212' },
+  { studentId: '21MECH001', name: 'Diana Prince', email: 'diana.dummy@example.com', mobile: '9876543213' },
+  { studentId: '21CIVIL001', name: 'Eve Wilson', email: 'eve.dummy@example.com', mobile: '9876543214' },
+  { studentId: '21EEE001', name: 'Frank Miller', email: 'frank.dummy@example.com', mobile: '9876543215' },
+  { studentId: '21IT001', name: 'Grace Lee', email: 'grace.dummy@example.com', mobile: '9876543216' },
+  { studentId: '21MET001', name: 'Henry Davis', email: 'henry.dummy@example.com', mobile: '9876543217' },
 ]
 
 async function seedStudents() {

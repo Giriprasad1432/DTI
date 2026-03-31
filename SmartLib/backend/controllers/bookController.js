@@ -2,6 +2,7 @@ import IssuedBooks from '../models/IssueBook.js';
 import Book from '../models/Book.js';
 import Students from '../models/students.js';
 import Reservation from '../models/Reservation.js';
+import Notification from '../models/Notification.js';
 
 // GET /api/books - Fetch books with filtering
 export const getBooks = async (req, res) => {
@@ -155,8 +156,8 @@ export const renewBook = async (req, res) => {
       return res.status(400).json({ error: 'Book already returned' });
     }
 
-    if (book.renewedCount >= 3) {
-      return res.status(400).json({ error: 'Maximum renewals reached (3 renewals allowed)' });
+    if (book.renewedCount >= 2) {
+      return res.status(400).json({ error: 'Maximum renewals reached (2 renewals allowed)' });
     }
 
     // Extend due date by 7 days
@@ -207,6 +208,29 @@ export const returnBook = async (req, res) => {
       { bookId: book.bookId },
       { $inc: { availableCopies: 1 } }
     );
+
+    // Check if any student has an active reservation for this book
+    const nextReservation = await Reservation.findOne({
+      bookId: book.bookId,
+      status: 'active'
+    }).sort({ reservationDate: 1 }); // oldest reservation first (FIFO queue)
+
+    if (nextReservation) {
+      // Mark reservation as 'notified' — starts 24h expiry countdown
+      await Reservation.findByIdAndUpdate(nextReservation._id, {
+        status: 'notified',
+        notifiedAt: new Date()
+      });
+
+      // Push an in-app notification to the student
+      await new Notification({
+        studentId: nextReservation.studentId,
+        title: 'Reserved Book Available!',
+        message: `Great news! Your reserved book "${nextReservation.bookName}" is now available in the library. Please collect it within 24 hours or the reservation will expire.`,
+        type: 'system',
+        bookId: nextReservation.bookId
+      }).save();
+    }
 
     res.json({ success: true });
   } catch (error) {
@@ -381,8 +405,8 @@ export const fulfillReservation = async (req, res) => {
       return res.status(404).json({ error: 'Reservation not found' });
     }
 
-    if (reservation.status !== 'active') {
-      return res.status(400).json({ error: 'Reservation is not active' });
+    if (reservation.status !== 'active' && reservation.status !== 'notified') {
+      return res.status(400).json({ error: 'Reservation is not active or awaiting pickup' });
     }
 
     // Check if book is available

@@ -45,7 +45,9 @@ const adminLogin = async (req, res) => {
       user: {
         id: adminData.adminId,
         name: adminData.name,
-        role: "admin"
+        role: "admin",
+        email: adminData.email || "",
+        mobile: adminData.mobile || ""
       }
     });
   } catch (err) {

@@ -22,15 +22,14 @@ export default function BookRow({ book, onRefresh }) {
   }
 
   async function handleFine() {
-    if (fine !== null) { setFine(null); return }
-    const data = await fetchFine(book.id)
-    setFine(data.fine)
-  }
-
-  function handleWhatsApp() {
-    const extra = book.days_left < 0 ? `Fine of Rs.${Math.abs(book.days_left) * 2} applicable. ` : ''
-    const msg = encodeURIComponent(`SmartLib: Hi ${book.student}, your book "${book.title}" was due on ${book.due_date}. ${extra}Please visit the library.`)
-    window.open(`https://api.whatsapp.com/send?phone=91${book.mobile}&text=${msg}`, '_blank')
+    try {
+      const data = await fetchFine(book.id)
+      setFine(data.fine)
+      const label = book.status === 'returned' ? 'Fine Calculated' : 'Current Fine Check';
+      toast(`${label}: ₹${data.fine}`, 'info')
+    } catch (err) {
+      toast('Failed to fetch fine', 'error')
+    }
   }
 
   const statusCls =
@@ -67,7 +66,11 @@ export default function BookRow({ book, onRefresh }) {
         <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full ${statusCls}`}>
           {statusLabel}
         </span>
-        {book.fine > 0 && <div className="text-xs font-bold text-red-600 mt-1">Fine: ₹{book.fine}</div>}
+        {(book.fine > 0 || fine > 0) && (
+          <div className="text-xs font-bold text-red-600 mt-1">
+            {book.status === 'returned' ? 'Fine Calculated' : 'Current Fine'}: ₹{fine > 0 ? fine : book.fine}
+          </div>
+        )}
       </td>
 
       {/* Actions */}
@@ -75,7 +78,7 @@ export default function BookRow({ book, onRefresh }) {
         {/* Renewal dots */}
         <div className="flex items-center gap-1 mb-2">
           <span className="text-[10px] text-slate-400 mr-1">Renewals:</span>
-          {[0, 1, 2].map(i => (
+          {[0, 1].map(i => (
             <span key={i} className={`w-2 h-2 rounded-full inline-block ${i < book.renewed_count ? 'bg-indigo-500' : 'bg-slate-200'}`} />
           ))}
         </div>
@@ -83,31 +86,27 @@ export default function BookRow({ book, onRefresh }) {
           {user.role === 'student' && (
             <button
               onClick={handleRenew}
-              disabled={book.renewed_count >= 3 || book.status === 'returned'}
+              disabled={book.renewed_count >= 2 || book.status === 'returned'}
               className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {book.renewed_count >= 3 ? 'Max Renewed' : book.status === 'returned' ? 'Returned' : 'Renew +7d'}
+              {book.renewed_count >= 2 ? 'Max Renewed' : book.status === 'returned' ? 'Returned' : 'Renew +7d'}
             </button>
           )}
           {user.role === 'admin' && (
             <>
               <button onClick={handleRenew}
-                disabled={book.renewed_count >= 3 || book.status === 'returned'}
+                disabled={book.renewed_count >= 2 || book.status === 'returned'}
                 className="text-[11px] font-semibold px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
-                {book.renewed_count >= 3 ? 'Max Renewed' : book.status === 'returned' ? 'Returned' : 'Renew'}
+                {book.renewed_count >= 2 ? 'Max Renewed' : book.status === 'returned' ? 'Returned' : 'Renew'}
               </button>
               <button onClick={handleReturn}
                 disabled={book.status === 'returned'}
                 className="text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed">
                 {book.status === 'returned' ? 'Returned' : 'Return'}
               </button>
-              <button onClick={handleWhatsApp}
-                className="text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all">
-                WhatsApp
-              </button>
               <button onClick={handleFine}
                 className="text-[11px] font-semibold px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-500 hover:text-white hover:border-amber-500 transition-all">
-                {fine !== null ? 'Hide' : 'Fine'}
+                Fine
               </button>
             </>
           )}

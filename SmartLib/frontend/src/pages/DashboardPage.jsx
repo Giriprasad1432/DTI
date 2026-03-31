@@ -5,6 +5,12 @@ import StatsRow from '../components/StatsRow'
 import BooksTable from '../components/BooksTable'
 import CatalogTable from '../components/CatalogTable'
 import IssueForm from '../components/IssueForm'
+import AdminStudents from '../components/AdminStudents'
+import AdminOverdue from '../components/AdminOverdue'
+import AdminReservations from '../components/AdminReservations'
+import StudentHistory from '../components/StudentHistory'
+import StudentFines from '../components/StudentFines'
+import SettingsPage from '../components/SettingsPlaceholder'
 import { GraduationCap, AlertTriangle, Settings, Clock, DollarSign, ClipboardList, Search, Smartphone, Phone, Mail, MapPin } from 'lucide-react'
 
 function ComingSoon({ icon: Icon, title }) {
@@ -36,14 +42,19 @@ function ProfileTab({ user }) {
         </div>
         <div className="space-y-4">
           {[
-            ['Student ID', user.studentId],
+            [user.role === 'admin' ? 'Admin ID' : 'Student ID', user.studentId || user.adminId],
             ['Name',       user.name],
+            ['Email',      user.email],
             ['Mobile',     user.mobile],
+            ...(user.role === 'student' ? [
+              ['Branch',   user.branch],
+              ['Year',     user.year],
+            ] : []),
             ['Role',       user.role],
           ].map(([label, val]) => (
             <div key={label} className="flex items-center justify-between py-3 border-b border-slate-100 last:border-none">
               <span className="text-xs font-bold text-slate-400 uppercase tracking-wide">{label}</span>
-              <span className="text-sm font-semibold text-slate-700">{val}</span>
+              <span className="text-sm font-semibold text-slate-700">{val || 'N/A'}</span>
             </div>
           ))}
         </div>
@@ -107,13 +118,13 @@ export default function DashboardPage() {
               placeholder="Search by Roll No, Book ID, Student Name..."
               value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <BooksTable search={search} refreshKey={refreshKey} />
+          <BooksTable search={search} refreshKey={refreshKey} onAction={() => setRefreshKey(k => k + 1)} />
         </>
       )
       if (tab === 'books')    return <BooksTable search={search} refreshKey={refreshKey} />
       if (tab === 'issue')    return <IssueForm onIssued={handleIssued} />
-      if (tab === 'reservations') return <ComingSoon icon={ClipboardList} title="Book Reservations" />
-      if (tab === 'overdue')  return <ComingSoon icon={AlertTriangle} title="Overdue Books" />
+      if (tab === 'reservations') return <AdminReservations search={search} />
+      if (tab === 'overdue')  return <AdminOverdue />
       if (tab === 'catalog')  return (
         <>
           <div className="relative mb-6">
@@ -123,13 +134,13 @@ export default function DashboardPage() {
               placeholder="Search by Book ID, Title, Author..."
               value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <CatalogTable search={search} page={catalogPage} onPageChange={setCatalogPage} />
+          <CatalogTable search={search} page={catalogPage} onPageChange={setCatalogPage} user={user} />
         </>
       )
-      if (tab === 'students') return <ComingSoon icon={GraduationCap} title="Student Records" />
+      if (tab === 'students') return <AdminStudents search={search} />
       if (tab === 'profile')  return <ProfileTab user={user} />
       if (tab === 'support')  return <SupportTab />
-      if (tab === 'settings') return <ComingSoon icon={Settings} title="Settings" />
+      if (tab === 'settings') return <SettingsPage />
     }
 
     // ── STUDENT tabs ──
@@ -144,15 +155,27 @@ export default function DashboardPage() {
             <div className="text-xs text-slate-500">ID: {user.studentId} · <Smartphone className="w-3 h-3 inline" /> {user.mobile}</div>
           </div>
         </div>
-        <BooksTable search="" refreshKey={refreshKey} />
+        <BooksTable search="" refreshKey={refreshKey} onAction={() => setRefreshKey(k => k + 1)} />
       </>
     )
-    if (tab === 'mybooks')  return <BooksTable search="" refreshKey={refreshKey} />
-    if (tab === 'history')  return <ComingSoon icon={Clock} title="Borrow History" />
-    if (tab === 'fines')    return <ComingSoon icon={DollarSign} title="My Fines" />
+    if (tab === 'mybooks')  return <BooksTable search="" refreshKey={refreshKey} onAction={() => setRefreshKey(k => k + 1)} />
+    if (tab === 'catalog')  return (
+      <>
+        <div className="relative mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <input
+            className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 shadow-sm transition-all placeholder:text-slate-400"
+            placeholder="Search by Book ID, Title, Author..."
+            value={search} onChange={e => setSearch(e.target.value)} />
+        </div>
+        <CatalogTable search={search} page={catalogPage} onPageChange={setCatalogPage} user={user} />
+      </>
+    )
+    if (tab === 'history')  return <StudentHistory />
+    if (tab === 'fines')    return <StudentFines />
     if (tab === 'profile')  return <ProfileTab user={user} />
     if (tab === 'support')  return <SupportTab />
-    if (tab === 'settings') return <ComingSoon icon={Settings} title="Settings" />
+    if (tab === 'settings') return <SettingsPage />
   }
 
   return (
