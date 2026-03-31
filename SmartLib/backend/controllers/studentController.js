@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import studentAuth from "../models/StudentAuth.js";
 import Students from "../models/students.js";
 import IssuedBooks from '../models/IssueBook.js';
@@ -39,9 +40,16 @@ const studentLogin = async (req, res) => {
       };
     }
 
+    const secret = process.env.JWT_SECRET || 'your_secret_key_here';
+    const token = jwt.sign(
+      { id: studentData.studentId, role: "student" },
+      secret,
+      { expiresIn: "10h" } // Session expires in 10 hours
+    );
+
     res.status(200).json({
       success: true,
-      token: "dummy-token", // In a real app, generate JWT
+      token,
       user: {
         id: studentData.studentId,
         name: studentData.name,

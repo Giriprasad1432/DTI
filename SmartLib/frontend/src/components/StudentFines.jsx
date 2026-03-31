@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 
 export default function StudentFines() {
   const { user } = useAuth()
-  const { total_fine, books, loading, error } = useFines(user.studentId)
+  const { total_fine, books, loading, error } = useFines(user.id)
 
   return (
     <div className="space-y-6">

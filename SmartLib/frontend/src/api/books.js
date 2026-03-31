@@ -147,9 +147,9 @@ export async function fetchOverdueBooks() {
   return res.data
 }
 
-// GET /api/admin/catalog?search=&page=
+// GET /api/catalog?search=&page=
 export async function fetchCatalog({ search = '', page = 1 } = {}) {
-  const res = await api.get('/admin/catalog', { params: { search, page } })
+  const res = await api.get('/catalog', { params: { search, page } })
   return res.data
 }
 

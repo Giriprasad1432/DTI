@@ -16,8 +16,8 @@ export function useCatalog({ search, page }) {
       setCatalog(data.books || [])
       setTotal(data.total || 0)
       setTotalPages(data.pages || 0)
-    } catch (e) {
-      setError('Cannot reach server. Is backend running on port 5000?')
+    } catch (err) {
+      setError(err.response?.data?.error || err.response?.data?.message || 'Connection failed. Please check if the server is running.')
     } finally {
       setLoading(false)
     }

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 
 export default function StudentHistory() {
   const { user } = useAuth()
-  const { history, loading, error } = useHistory(user.studentId)
+  const { history, loading, error } = useHistory(user.id)
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">

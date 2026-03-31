@@ -10,7 +10,16 @@ import adminLogin, {
   deleteFromCatalog
 } from '../controllers/adminController.js';
 
+import { verifyToken, adminOnly } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
+
+// Public routes
+router.post('/login', adminLogin);
+
+// Protected routes - Require admin privileges
+router.use(verifyToken);
+router.use(adminOnly);
 
 router.post('/', async (req, res) => {
     console.log('Received POST request:', req.body);
@@ -43,9 +52,6 @@ router.get('/students', getAllStudents);
 
 // GET /api/admin/overdue - Get overdue books
 router.get('/overdue', getOverdueBooks);
-
-// GET /api/admin/catalog - Get book catalog
-router.get('/catalog', getCatalog);
 
 // POST /api/admin/catalog - Add book to catalog
 router.post('/catalog', addBookToCatalog);

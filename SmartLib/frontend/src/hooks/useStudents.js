@@ -12,8 +12,8 @@ export function useStudents(search = '') {
     try {
       const data = await fetchAllStudents({ search })
       setStudents(data)
-    } catch (e) {
-      setError('Cannot reach server to fetch students.')
+    } catch (err) {
+      setError(err.response?.data?.error || err.response?.data?.message || 'Connection failed. Please check if the server is running.')
     } finally {
       setLoading(false)
     }

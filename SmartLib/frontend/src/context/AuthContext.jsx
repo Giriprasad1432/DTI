@@ -9,9 +9,10 @@ export function AuthProvider({ children }) {
     return stored ? JSON.parse(stored) : null
   })
 
-  function login(userData) {
+  function login(userData, token) {
     setUser(userData)
     localStorage.setItem('sl_user', JSON.stringify(userData))
+    if (token) sessionStorage.setItem('sl_token', token)
   }
 
   async function logout() {

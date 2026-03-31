@@ -3,7 +3,7 @@ import { useBooks } from '../hooks/useBooks'
 import BookRow from './BookRow'
 import { BookOpen, AlertTriangle } from 'lucide-react'
 
-export default function BooksTable({ search, refreshKey, onAction }) {
+export default function BooksTable({ search, refreshKey, onAction, limit }) {
   const { user } = useAuth()
   const { books, loading, error, reload } = useBooks({
     role: user.role, studentId: user.id, search, _key: refreshKey,
@@ -17,13 +17,15 @@ export default function BooksTable({ search, refreshKey, onAction }) {
   const overdueCount = books.filter(b => b.status === 'overdue').length
   const title = user.role === 'admin'
     ? (overdueCount > 0 ? <><AlertTriangle className="w-4 h-4 inline" /> {overdueCount} Overdue · </> : '') + 'All Issued Books'
-    : 'My Borrowed Books'
+    : (limit ? 'Recent Borrowed Books' : 'My Borrowed Books')
+
+  const displayBooks = limit ? books.slice(0, limit) : books
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
       <div className="px-7 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1">{title}</span>
-        <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">{books.length} Records</span>
+        <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">{books.length} Total</span>
       </div>
 
       {loading && <div className="text-center py-16 text-slate-400 text-sm">Loading...</div>}
@@ -47,9 +49,14 @@ export default function BooksTable({ search, refreshKey, onAction }) {
               </tr>
             </thead>
             <tbody>
-              {books.map(book => <BookRow key={book.id} book={book} onRefresh={handleRefresh} />)}
+              {displayBooks.map(book => <BookRow key={book.id} book={book} onRefresh={handleRefresh} />)}
             </tbody>
           </table>
+          {limit && books.length > limit && (
+            <div className="p-4 bg-slate-50 border-t border-slate-100 text-center">
+              <p className="text-xs text-slate-500">Showing latest {limit} books. Check "My Books" for full history.</p>
+            </div>
+          )}
         </div>
       )}
     </div>

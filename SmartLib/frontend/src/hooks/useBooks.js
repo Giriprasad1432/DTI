@@ -12,8 +12,8 @@ export function useBooks({ role, studentId, search }) {
     try {
       const data = await fetchBooks({ role, studentId, search })
       setBooks(data)
-    } catch (e) {
-      setError('Cannot reach server. Is the backend server running on port 5000?')
+    } catch (err) {
+      setError(err.response?.data?.error || err.response?.data?.message || 'Connection failed. Please check if the server is running.')
     } finally {
       setLoading(false)
     }

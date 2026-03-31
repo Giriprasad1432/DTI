@@ -7,14 +7,17 @@ export function useFines(studentId) {
   const [error, setError] = useState(null)
 
   const load = useCallback(async () => {
-    if (!studentId) return
     setLoading(true)
     setError(null)
+    if (!studentId) {
+      setLoading(false)
+      return
+    }
     try {
       const response = await fetchMyFines(studentId)
       setData(response)
-    } catch (e) {
-      setError('Cannot reach server to fetch fines.')
+    } catch (err) {
+      setError(err.response?.data?.error || err.response?.data?.message || 'Connection failed. Please check if the server is running.')
     } finally {
       setLoading(false)
     }

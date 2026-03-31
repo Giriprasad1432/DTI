@@ -76,9 +76,9 @@ export default function IssueForm({ onIssued }) {
   }
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-7 mb-6 shadow-sm">
-      <div className="text-xs font-bold uppercase tracking-widest text-slate-400 mb-5">Register New Book Issue</div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+    <div className="bg-white border border-slate-200 rounded-2xl p-5 md:p-7 mb-6 shadow-sm">
+      <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Register New Book Issue</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <div className="relative">
           <input
             className={inputCls}
@@ -94,7 +94,7 @@ export default function IssueForm({ onIssued }) {
             </div>
           )}
         </div>
-        <input className={`${inputCls} md:col-span-2`} placeholder="Book Title *" value={form.book_name} onChange={e => set('book_name', e.target.value)} />
+        <input className={`${inputCls} sm:col-span-2`} placeholder="Book Title *" value={form.book_name} onChange={e => set('book_name', e.target.value)} />
         <div className="relative">
           <input
             className={inputCls}
@@ -111,27 +111,27 @@ export default function IssueForm({ onIssued }) {
           )}
         </div>
         <input className={inputCls} placeholder="Student Name *" value={form.student_name} onChange={e => set('student_name', e.target.value)} />
-        <input className={inputCls} placeholder="WhatsApp No"    value={form.mobile}       onChange={e => set('mobile', e.target.value)} />
+        <input className={inputCls} placeholder="Contact Number (WhatsApp)" value={form.mobile} onChange={e => set('mobile', e.target.value)} />
         <select className={inputCls} value={form.branch} onChange={e => set('branch', e.target.value)}>
           {['CSE','ECE','EEE','IT','CIVIL','METALLURGY','MECH'].map(b => <option key={b}>{b}</option>)}
         </select>
         <select className={inputCls} value={form.year} onChange={e => set('year', e.target.value)}>
           {['1st Year','2nd Year','3rd Year','4th Year'].map(y => <option key={y}>{y}</option>)}
         </select>
-        <div className="flex items-center gap-2">
-          <label className="flex items-center gap-2 text-sm text-slate-600">
+        <div className="flex items-center gap-2 py-1">
+          <label className="flex items-center gap-3 text-sm text-slate-600 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={reserveMode}
               onChange={e => setReserveMode(e.target.checked)}
-              className="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500"
+              className="w-5 h-5 text-indigo-600 bg-slate-100 border-slate-300 rounded-lg focus:ring-indigo-500 transition-all"
             />
-            Reserve if unavailable
+            <span className="font-medium">Reserve if unavailable</span>
           </label>
         </div>
         <button
           onClick={submit} disabled={loading}
-          className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-indigo-700 transition-all hover:-translate-y-0.5 shadow-md shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0"
+          className="sm:col-span-2 md:col-span-1 bg-indigo-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all active:scale-95 shadow-lg shadow-indigo-100 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? (reserveMode ? 'Reserving...' : 'Issuing...') : (reserveMode ? 'Reserve Book →' : 'Issue Book →')}
         </button>

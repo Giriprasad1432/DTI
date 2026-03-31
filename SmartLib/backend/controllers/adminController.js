@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import adminAuth from '../models/AdminAuth.js'
 import Admin from "../models/admin.js";
@@ -39,9 +40,16 @@ const adminLogin = async (req, res) => {
       };
     }
 
+    const secret = process.env.JWT_SECRET || 'your_secret_key_here';
+    const token = jwt.sign(
+      { id: adminData.adminId, role: "admin" },
+      secret,
+      { expiresIn: "10h" } // Session expires in 10 hours
+    );
+
     res.status(200).json({
       success: true,
-      token: "dummy-token", // In a real app, generate JWT
+      token,
       user: {
         id: adminData.adminId,
         name: adminData.name,

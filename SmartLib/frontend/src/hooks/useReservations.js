@@ -12,8 +12,8 @@ export function useReservations({ role, studentId, search }) {
     try {
       const data = await fetchReservations({ role, studentId, search })
       setReservations(data)
-    } catch (e) {
-      setError('Cannot reach server to fetch reservations.')
+    } catch (err) {
+      setError(err.response?.data?.error || err.response?.data?.message || 'Connection failed. Please check if the server is running.')
     } finally {
       setLoading(false)
     }

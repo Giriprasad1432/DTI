@@ -22,11 +22,7 @@ export default function AdminLoginPage() {
     setError('');
     try {
       const data = await loginAdmin({ adminId, password });
-      login({
-        adminId: adminId,
-        role: 'admin',
-        ...data.user
-      })
+      login(data.user, data.token)
       navigate('/dashboard')
     } catch (err) {
       if (err.response?.status === 400) {

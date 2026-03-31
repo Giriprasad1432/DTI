@@ -12,40 +12,28 @@ import {
   getReservations,
   fulfillReservation
 } from '../controllers/bookController.js';
+import { getCatalog } from '../controllers/adminController.js';
+import { verifyToken, adminOnly } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// GET /api/books - Fetch books with filtering
+// All book-related routes require authentication
+router.use(verifyToken);
+
+// ── Shared Routes (Admin & Student) ──
 router.get('/books', getBooks);
-
-// GET /api/stats - Get library statistics
+router.get('/catalog', getCatalog);
 router.get('/stats', getStats);
-
-// POST /api/issue - Issue a new book
-router.post('/issue', issueBook);
-
-// POST /api/renew - Renew a book
-router.post('/renew', renewBook);
-
-// POST /api/return - Return a book
-router.post('/return', returnBook);
-
-// GET /api/fine - Get fine for a book
 router.get('/fine', getFine);
-
-// GET /api/book/:bookId - Get book details by book ID
 router.get('/book/:bookId', getBookById);
-
-// GET /api/student/:studentId - Get student details by student ID
-router.get('/student/:studentId', getStudentById);
-
-// POST /api/reserve - Reserve a book
+router.get('/reservations', getReservations);
 router.post('/reserve', reserveBook);
 
-// GET /api/reservations - Get reservations
-router.get('/reservations', getReservations);
-
-// POST /api/reservations/:id/fulfill - Fulfill a reservation
-router.post('/reservations/:id/fulfill', fulfillReservation);
+// ── Admin-Only Routes ──
+router.post('/issue',       adminOnly, issueBook);
+router.post('/renew',       adminOnly, renewBook);
+router.post('/return',      adminOnly, returnBook);
+router.get('/student/:studentId', adminOnly, getStudentById);
+router.post('/reservations/:id/fulfill', adminOnly, fulfillReservation);
 
 export default router;

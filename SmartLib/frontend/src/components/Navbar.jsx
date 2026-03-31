@@ -34,7 +34,7 @@ export default function Navbar() {
         <Link to={'/'} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
               ${isActive('/') ? ' bg-indigo-50 text-indigo-600 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'}`}>Home</Link>
         {/* Login buttons */}
-      
+
         {user ? (
           <Link to="/dashboard"
             className="flex items-center gap-2 text-sm font-bold bg-indigo-600 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-all hover:-translate-y-0.5 shadow-lg shadow-indigo-100">
@@ -44,12 +44,12 @@ export default function Navbar() {
           <>
             <Link to="/login/student"
               className={`flex items-center gap-1.5 text-sm font-semibold text-slate-500 border px-4 py-2 rounded-lg transition-all
-              ${isActive('/login/student') ? ' bg-emerald-500 border-2  text-white': 'hover:bg-emerald-50 hover:border-emerald-400' }`}>
+              ${isActive('/login/student') ? ' bg-emerald-500 border-2  text-white' : 'hover:bg-emerald-50 hover:border-emerald-400'}`}>
               <GraduationCap className="w-4 h-4" /> Student
             </Link>
             <Link to="/login/admin"
               className={`flex border items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all hover:-translate-y-0.5 hover:border-indigo-400
-               ${isActive('/login/admin') ? 'border-gray-700 bg-indigo-600 text-white shadow-md shadow-indigo-200': 'text-slate-500 hover:bg-indigo-100 ' }`}>
+               ${isActive('/login/admin') ? 'border-gray-700 bg-indigo-600 text-white shadow-md shadow-indigo-200' : 'text-slate-500 hover:bg-indigo-100 '}`}>
               <Key className="w-4 h-4" /> Admin
             </Link>
           </>
@@ -78,12 +78,12 @@ export default function Navbar() {
               <>
                 <Link to="/login/student" onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-emerald-700 border border-emerald-200 shadow-md shadow-emerald-100 transition-all
-                  ${isActive('/login/student') ? ' bg-emerald-500 border-2 border-gray-700 text-white': 'hover:bg-emerald-50 hover:border-emerald-400' }`}>
+                  ${isActive('/login/student') ? ' bg-emerald-500 border-2 border-gray-700 text-white' : 'hover:bg-emerald-50 hover:border-emerald-400'}`}>
                   <GraduationCap className="w-4 h-4" /> Student Login
                 </Link>
                 <Link to="/login/admin" onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border border-indigo-300 shadow-md shadow-indigo-200 transition-all hover:-translate-y-0.5
-                   ${isActive('/login/admin') ? 'border-gray-700 bg-indigo-600 text-white': 'text-slate-500 hover:bg-indigo-100 ' }`}>
+                   ${isActive('/login/admin') ? 'border-gray-700 bg-indigo-600 text-white' : 'text-slate-500 hover:bg-indigo-100 '}`}>
                   <Key className="w-4 h-4" /> Admin Login
                 </Link>
               </>

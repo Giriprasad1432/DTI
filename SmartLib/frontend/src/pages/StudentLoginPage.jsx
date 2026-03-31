@@ -20,11 +20,7 @@ export default function StudentLoginPage() {
     setError('');
     try {
       const data = await loginStudent({ rollNo, password });
-      login({
-        studentId: rollNo,
-        role: 'student',
-        ...data.user
-      })
+      login(data.user, data.token)
       navigate('/dashboard')
     } catch (err) {
       if (err.response?.status === 400) {

@@ -12,7 +12,7 @@ export default function CatalogTable({ search, page = 1, onPageChange, user }) {
       await reserveBook({
         book_no: book.bookId,
         book_name: book.title,
-        student_no: user.studentId,
+        student_no: user.id,
         student_name: user.name,
         mobile: user.mobile,
         branch: user.branch,

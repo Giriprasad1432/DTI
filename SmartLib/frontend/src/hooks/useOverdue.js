@@ -12,8 +12,8 @@ export function useOverdue() {
     try {
       const data = await fetchOverdueBooks()
       setOverdue(data)
-    } catch (e) {
-      setError('Cannot reach server to fetch overdue books.')
+    } catch (err) {
+      setError(err.response?.data?.error || err.response?.data?.message || 'Connection failed. Please check if the server is running.')
     } finally {
       setLoading(false)
     }

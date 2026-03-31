@@ -4,7 +4,14 @@ import Students from '../models/students.js';
 import studentAuth from '../models/StudentAuth.js';
 import studentLogin, { getMyBooks, getMyFines, getBorrowHistory } from '../controllers/studentController.js';
 
+import { verifyToken } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
+
+router.post('/login', studentLogin);
+
+// Protected student routes
+router.use(verifyToken);
 
 router.post('/', async (req, res) => {
     console.log('Received POST request:', req.body);

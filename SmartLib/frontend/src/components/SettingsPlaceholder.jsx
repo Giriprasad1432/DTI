@@ -24,7 +24,7 @@ export default function SettingsPage() {
 
   const inp = "w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition-all placeholder:text-slate-400"
 
-  const userId = user?.role === 'admin' ? user?.adminId : user?.studentId
+  const userId = user?.id
 
   async function handleProfileSave(e) {
     e.preventDefault()
@@ -72,47 +72,47 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-6">
+    <div className="max-w-2xl space-y-6 pb-20 md:pb-0">
 
       {/* ── Profile Information ── */}
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-        <div className="px-7 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+        <div className="px-5 md:px-7 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
           <User className="w-4 h-4 text-emerald-500" />
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Profile Information</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest text-balance">Profile Information</span>
         </div>
 
-        <form onSubmit={handleProfileSave} className="p-7 space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <form onSubmit={handleProfileSave} className="p-5 md:p-7 space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">{user?.role === 'admin' ? 'Admin ID' : 'Student ID'}</label>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">{user?.role === 'admin' ? 'Admin ID' : 'Roll Number'}</label>
               <input className={inp + " bg-slate-100 cursor-not-allowed"} value={userId} disabled />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Role</label>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Role Type</label>
               <input className={inp + " bg-slate-100 cursor-not-allowed"} value={user?.role} disabled />
             </div>
-            <div className="md:col-span-2">
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Full Name</label>
+            <div className="sm:col-span-2">
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Full Name</label>
               <input className={inp} value={name} onChange={e => setName(e.target.value)} placeholder="Your full name" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Email Address</label>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Email Address</label>
               <input className={inp} type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your.email@jntugv.edu.in" />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Mobile Number</label>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Mobile Number</label>
               <input className={inp} value={mobile} onChange={e => setMobile(e.target.value)} placeholder="10-digit mobile" />
             </div>
             {user?.role === 'student' && (
               <>
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Branch</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Department</label>
                   <select className={inp} value={branch} onChange={e => setBranch(e.target.value)}>
                     {['CSE','ECE','EEE','IT','CIVIL','METALLURGY','MECH'].map(b => <option key={b}>{b}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Year</label>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Academic Year</label>
                   <select className={inp} value={year} onChange={e => setYear(e.target.value)}>
                     {['1st Year','2nd Year','3rd Year','4th Year'].map(y => <option key={y}>{y}</option>)}
                   </select>
@@ -122,50 +122,52 @@ export default function SettingsPage() {
           </div>
 
           {profileMsg && (
-            <div className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium ${profileMsg.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-600'}`}>
-              {profileMsg.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
-              {profileMsg.text}
+            <div className={`flex items-start gap-3 px-4 py-3 rounded-xl text-sm font-medium ${profileMsg.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-600'}`}>
+              {profileMsg.type === 'success' ? <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> : <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />}
+              <span>{profileMsg.text}</span>
             </div>
           )}
 
           <button type="submit" disabled={profileLoading}
-            className="px-8 py-3.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-all hover:-translate-y-0.5 shadow-lg shadow-emerald-200 disabled:opacity-50 disabled:translate-y-0">
-            {profileLoading ? 'Saving Info...' : 'Update Profile'}
+            className="w-full sm:w-auto px-10 py-3.5 bg-emerald-600 text-white text-sm font-bold rounded-xl hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-100 disabled:opacity-50">
+            {profileLoading ? 'Saving Info...' : 'Save Profile Details'}
           </button>
         </form>
       </div>
 
       {/* ── Change Password ── */}
       <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-        <div className="px-7 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
+        <div className="px-5 md:px-7 py-4 border-b border-slate-100 bg-slate-50 flex items-center gap-3">
           <Lock className="w-4 h-4 text-amber-500" />
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Change Password</span>
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Update Password</span>
         </div>
 
-        <form onSubmit={handlePasswordChange} className="p-7 space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Current Password</label>
-            <input className={inp} type="password" value={currentPwd} onChange={e => setCurrentPwd(e.target.value)} placeholder="••••••••" />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">New Password</label>
-            <input className={inp} type="password" value={newPwd} onChange={e => setNewPwd(e.target.value)} placeholder="••••••••" />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">Confirm New Password</label>
-            <input className={inp} type="password" value={confirmPwd} onChange={e => setConfirmPwd(e.target.value)} placeholder="••••••••" />
+        <form onSubmit={handlePasswordChange} className="p-5 md:p-7 space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="sm:col-span-2">
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Current Password</label>
+              <input className={inp} type="password" value={currentPwd} onChange={e => setCurrentPwd(e.target.value)} placeholder="••••••••" />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">New Password</label>
+              <input className={inp} type="password" value={newPwd} onChange={e => setNewPwd(e.target.value)} placeholder="••••••••" />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-2">Confirm New Password</label>
+              <input className={inp} type="password" value={confirmPwd} onChange={e => setConfirmPwd(e.target.value)} placeholder="••••••••" />
+            </div>
           </div>
 
           {pwdMsg && (
-            <div className={`flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium ${pwdMsg.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-600'}`}>
-              {pwdMsg.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <AlertTriangle className="w-4 h-4" />}
-              {pwdMsg.text}
+            <div className={`flex items-start gap-3 px-4 py-3 rounded-xl text-sm font-medium ${pwdMsg.type === 'success' ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-600'}`}>
+              {pwdMsg.type === 'success' ? <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" /> : <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />}
+              <span>{pwdMsg.text}</span>
             </div>
           )}
 
           <button type="submit" disabled={pwdLoading}
-            className="px-6 py-3 bg-amber-500 text-white text-sm font-bold rounded-xl hover:bg-amber-600 transition-all hover:-translate-y-0.5 shadow-lg shadow-amber-200 disabled:opacity-50 disabled:translate-y-0">
-            {pwdLoading ? 'Changing...' : 'Change Password'}
+            className="w-full sm:w-auto px-10 py-3.5 bg-amber-500 text-white text-sm font-bold rounded-xl hover:bg-amber-600 transition-all active:scale-95 shadow-lg shadow-amber-100 disabled:opacity-50">
+            {pwdLoading ? 'Updating...' : 'Update Password'}
           </button>
         </form>
       </div>
