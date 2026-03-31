@@ -5,11 +5,12 @@ import StatsRow from '../components/StatsRow'
 import BooksTable from '../components/BooksTable'
 import CatalogTable from '../components/CatalogTable'
 import IssueForm from '../components/IssueForm'
+import { GraduationCap, AlertTriangle, Settings, Clock, DollarSign, ClipboardList, Search, Smartphone, Phone, Mail, MapPin } from 'lucide-react'
 
-function ComingSoon({ icon, title }) {
+function ComingSoon({ icon: Icon, title }) {
   return (
     <div className="flex flex-col items-center justify-center h-64 text-center">
-      <div className="text-5xl mb-4">{icon}</div>
+      <Icon className="w-16 h-16 mb-4 text-slate-300" />
       <h2 className="text-xl font-bold text-slate-700 mb-2">{title}</h2>
       <p className="text-slate-400 text-sm">This section is coming soon.</p>
     </div>
@@ -57,13 +58,13 @@ function SupportTab() {
       <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
         <h2 className="text-lg font-extrabold text-slate-800 mb-4">Help & Support</h2>
         {[
-          ['📞', 'Library Contact',   'Visit the library desk or call extension 101'],
-          ['📧', 'Email Support',     'library@jntugv.edu.in'],
-          ['🕐', 'Library Hours',     'Mon–Sat: 9:00 AM – 6:00 PM'],
-          ['📍', 'Location',          'Ground Floor, Main Academic Block, JNTUGV Campus'],
-        ].map(([icon, title, desc]) => (
+          [Phone, 'Library Contact',   'Visit the library desk or call extension 101'],
+          [Mail, 'Email Support',     'library@jntugv.edu.in'],
+          [Clock, 'Library Hours',     'Mon–Sat: 9:00 AM – 6:00 PM'],
+          [MapPin, 'Location',          'Ground Floor, Main Academic Block, JNTUGV Campus'],
+        ].map(([Icon, title, desc]) => (
           <div key={title} className="flex items-start gap-4 py-3 border-b border-slate-100 last:border-none">
-            <span className="text-2xl mt-0.5">{icon}</span>
+            <Icon className="w-5 h-5 mt-0.5 text-slate-500" />
             <div>
               <div className="text-sm font-bold text-slate-700">{title}</div>
               <div className="text-xs text-slate-400 mt-0.5">{desc}</div>
@@ -100,7 +101,7 @@ export default function DashboardPage() {
         <>
           <StatsRow refreshKey={refreshKey} />
           <div className="relative mb-6">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
             <input
               className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-sm transition-all placeholder:text-slate-400"
               placeholder="Search by Roll No, Book ID, Student Name..."
@@ -111,12 +112,12 @@ export default function DashboardPage() {
       )
       if (tab === 'books')    return <BooksTable search={search} refreshKey={refreshKey} />
       if (tab === 'issue')    return <IssueForm onIssued={handleIssued} />
-      if (tab === 'reservations') return <ComingSoon icon="📋" title="Book Reservations" />
-      if (tab === 'overdue')  return <ComingSoon icon="⚠️"  title="Overdue Books" />
+      if (tab === 'reservations') return <ComingSoon icon={ClipboardList} title="Book Reservations" />
+      if (tab === 'overdue')  return <ComingSoon icon={AlertTriangle} title="Overdue Books" />
       if (tab === 'catalog')  return (
         <>
           <div className="relative mb-6">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">🔍</span>
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4" />
             <input
               className="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-sm transition-all placeholder:text-slate-400"
               placeholder="Search by Book ID, Title, Author..."
@@ -125,10 +126,10 @@ export default function DashboardPage() {
           <CatalogTable search={search} page={catalogPage} onPageChange={setCatalogPage} />
         </>
       )
-      if (tab === 'students') return <ComingSoon icon="🎓"  title="Student Records" />
+      if (tab === 'students') return <ComingSoon icon={GraduationCap} title="Student Records" />
       if (tab === 'profile')  return <ProfileTab user={user} />
       if (tab === 'support')  return <SupportTab />
-      if (tab === 'settings') return <ComingSoon icon="⚙️"  title="Settings" />
+      if (tab === 'settings') return <ComingSoon icon={Settings} title="Settings" />
     }
 
     // ── STUDENT tabs ──
@@ -140,18 +141,18 @@ export default function DashboardPage() {
           </div>
           <div>
             <div className="text-sm font-bold text-slate-800">Welcome back, {user.name}!</div>
-            <div className="text-xs text-slate-500">ID: {user.studentId} · 📱 {user.mobile}</div>
+            <div className="text-xs text-slate-500">ID: {user.studentId} · <Smartphone className="w-3 h-3 inline" /> {user.mobile}</div>
           </div>
         </div>
         <BooksTable search="" refreshKey={refreshKey} />
       </>
     )
     if (tab === 'mybooks')  return <BooksTable search="" refreshKey={refreshKey} />
-    if (tab === 'history')  return <ComingSoon icon="🕐" title="Borrow History" />
-    if (tab === 'fines')    return <ComingSoon icon="💰" title="My Fines" />
+    if (tab === 'history')  return <ComingSoon icon={Clock} title="Borrow History" />
+    if (tab === 'fines')    return <ComingSoon icon={DollarSign} title="My Fines" />
     if (tab === 'profile')  return <ProfileTab user={user} />
     if (tab === 'support')  return <SupportTab />
-    if (tab === 'settings') return <ComingSoon icon="⚙️" title="Settings" />
+    if (tab === 'settings') return <ComingSoon icon={Settings} title="Settings" />
   }
 
   return (

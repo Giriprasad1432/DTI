@@ -1,27 +1,27 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
-import { LogOut } from 'lucide-react';
+import { LogOut, BarChart3, BookOpen, Clock, DollarSign, User, Headphones, Plus, ClipboardList, AlertTriangle, FolderOpen, GraduationCap, Settings } from 'lucide-react';
 
 const STUDENT_MENU = [
-  { id: 'dashboard', icon: '📊', label: 'Dashboard' },
-  { id: 'mybooks',   icon: '📚', label: 'My Books' },
-  { id: 'history',   icon: '🕐', label: 'Borrow History' },
-  { id: 'fines',     icon: '💰', label: 'My Fines' },
-  { id: 'profile',   icon: '👤', label: 'Profile' },
-  { id: 'support',   icon: '🎧', label: 'Support' },
+  { id: 'dashboard', icon: BarChart3, label: 'Dashboard' },
+  { id: 'mybooks',   icon: BookOpen, label: 'My Books' },
+  { id: 'history',   icon: Clock, label: 'Borrow History' },
+  { id: 'fines',     icon: DollarSign, label: 'My Fines' },
+  { id: 'profile',   icon: User, label: 'Profile' },
+  { id: 'support',   icon: Headphones, label: 'Support' },
 ]
 
 const ADMIN_MENU = [
-  { id: 'dashboard', icon: '📊', label: 'Dashboard' },
-  { id: 'books',     icon: '📚', label: 'Issued Books' },
-  { id: 'issue',     icon: '➕', label: 'Issue Book' },
-  { id: 'reservations', icon: '📋', label: 'Reservations' },
-  { id: 'overdue',   icon: '⚠️',  label: 'Overdue' },
-  { id: 'catalog',   icon: '🗂️',  label: 'Catalog' },
-  { id: 'students',  icon: '🎓', label: 'Students' },
-  { id: 'profile',   icon: '👤', label: 'Profile' },
-  { id: 'support',   icon: '🎧', label: 'Support' },
+  { id: 'dashboard', icon: BarChart3, label: 'Dashboard' },
+  { id: 'books',     icon: BookOpen, label: 'Issued Books' },
+  { id: 'issue',     icon: Plus, label: 'Issue Book' },
+  { id: 'reservations', icon: ClipboardList, label: 'Reservations' },
+  { id: 'overdue',   icon: AlertTriangle,  label: 'Overdue' },
+  { id: 'catalog',   icon: FolderOpen,  label: 'Catalog' },
+  { id: 'students',  icon: GraduationCap, label: 'Students' },
+  { id: 'profile',   icon: User, label: 'Profile' },
+  { id: 'support',   icon: Headphones, label: 'Support' },
 ]
 
 export default function DashboardLayout({ activeTab, onTabChange, children }) {
@@ -65,7 +65,7 @@ export default function DashboardLayout({ activeTab, onTabChange, children }) {
                 ${activeTab === item.id
                   ? `bg-${accentColor}-50 text-${accentColor}-700 border-r-2 border-${accentColor}-600`
                   : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'}`}>
-              <span className="text-lg flex-shrink-0">{item.icon}</span>
+              <item.icon className="w-5 h-5 flex-shrink-0" />
               {sidebarOpen && <span className="truncate">{item.label}</span>}
             </button>
           ))}
@@ -139,20 +139,20 @@ export default function DashboardLayout({ activeTab, onTabChange, children }) {
                   </div>
                 </div>
                 {[
-                  { icon:'👤', label:'Profile',  id:'profile' },
-                  { icon:'⚙️', label:'Settings', id:'settings' },
-                  { icon:'🎧', label:'Support',  id:'support' },
+                  { icon: User, label:'Profile',  id:'profile' },
+                  { icon: Settings, label:'Settings', id:'settings' },
+                  { icon: Headphones, label:'Support',  id:'support' },
                 ].map(item => (
                   <button key={item.id}
                     onClick={() => { onTabChange(item.id); setShowUserMenu(false) }}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-all">
-                    <span>{item.icon}</span> {item.label}
+                    <item.icon className="w-4 h-4" /> {item.label}
                   </button>
                 ))}
                 <div className="border-t border-slate-100">
                   <button onClick={handleLogout}
                     className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-all">
-                    <span>🚪</span> Logout
+                    <LogOut className="w-4 h-4" /> Logout
                   </button>
                 </div>
               </div>

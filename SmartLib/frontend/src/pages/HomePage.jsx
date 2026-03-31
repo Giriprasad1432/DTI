@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { BookOpen, Bell, RefreshCw, DollarSign, Search, BarChart3, CheckCircle, Clock, GraduationCap } from 'lucide-react'
 
 
-function FeatureCard({ icon, title, desc }) {
+function FeatureCard({ icon: Icon, title, desc }) {
   return (
     <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 hover:-translate-y-2 hover:shadow-xl hover:border-indigo-300 hover:bg-white transition-all duration-300">
-      <div className="text-4xl mb-4">{icon}</div>
+      <Icon className="w-10 h-10 mb-4 text-indigo-600" />
       <h3 className="text-base font-bold text-slate-800 mb-2">{title}</h3>
       <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
     </div>
@@ -49,7 +50,7 @@ export default function HomePage() {
           style={{ background: 'radial-gradient(circle,rgba(99,102,241,0.15) 0%,transparent 70%)' }} />
 
         {/* ── Hero Content ── */}
-        <div className="flex-1 relative z-10 animate-fade-slide-up">
+        <div className="flex-1 relative z-10 animate-slide-up">
 
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 px-4 py-1.5 rounded-full text-xs font-medium mb-7">
@@ -79,9 +80,8 @@ export default function HomePage() {
 
           <div className='flex flex-col items-center justify-center gap-2'>
 
-          <p className="text-md text-white leading-relaxed lg:w-[800px] text-center mb-9 mt-5 bg-slate-400/20 p-5 rounded">
-            A modern digital library portal for JNTUGV students and faculty —
-            track books, manage due dates, and get instant WhatsApp reminders.
+           <p className="text-lg text-white leading-relaxed lg:w-[900px] text-center mb-9 mt-5 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 backdrop-blur-sm border border-white/10 p-6 rounded-2xl shadow-lg">
+            A modern digital library portal for JNTUGV students and faculty — track books, manage due dates, and get instant WhatsApp reminders.
           </p>
 
           {/* CTA buttons — updated to separate login pages */}
@@ -101,17 +101,17 @@ export default function HomePage() {
           </div>
 
           {/* Stats */}
-          <div className="flex flex-wrap gap-20">
+           <div className="flex flex-wrap gap-20 animate-slide-up delay-1100">
             {[
-              ['📚', '2,400+', 'Books Available'],
-              ['🎓', '1,200+', 'Active Students'],
-              ['✅', '98%',    'On-time Returns'],
-              ['🕐', '24/7',   'Portal Access'],
-            ].map(([icon, val, label]) => (
-              <div key={label} className="bg-white/[0.04] border border-white/[0.08] rounded-2xl px-5 py-4 text-center min-w-[110px] hover:-translate-y-1 hover:bg-indigo-600/10 transition-all">
-                <div className="text-xl mb-1">{icon}</div>
+              [BookOpen, '2,400+', 'Books Available'],
+              [GraduationCap, '1,200+', 'Active Students'],
+              [CheckCircle, '98%',    'On-time Returns'],
+              [Clock, '24/7',   'Portal Access'],
+            ].map(([Icon, val, label]) => (
+              <div key={label} className="bg-white/[0.15] backdrop-blur-md border border-white/[0.2] rounded-2xl px-5 py-4 text-center min-w-[110px] hover:-translate-y-1 hover:bg-white/[0.25] hover:border-indigo-400/50 transition-all shadow-lg shadow-black/20">
+                <Icon className="w-6 h-6 mb-1 mx-auto text-indigo-300" />
                 <div className="text-xl font-extrabold text-white tracking-tight">{val}</div>
-                <div className="text-[10px] text-slate-500 uppercase tracking-wide mt-1">{label}</div>
+                <div className="text-[10px] text-slate-300 uppercase tracking-wide mt-1">{label}</div>
               </div>
             ))}
           </div>
@@ -128,12 +128,12 @@ export default function HomePage() {
           <p className="text-slate-400 text-base">Designed for JNTUGV students, faculty, and library staff</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          <FeatureCard icon="📖" title="Book Tracking"   desc="Know exactly which books you have, when they're due, and how many renewals you have left." />
-          <FeatureCard icon="🔔" title="WhatsApp Alerts" desc="Librarians send instant WhatsApp reminders to students with overdue books — no manual effort." />
-          <FeatureCard icon="🔄" title="Easy Renewals"   desc="Renew books in one click. Up to 2 renewals per book, each adding 7 more days." />
-          <FeatureCard icon="💰" title="Fine Calculator" desc="Auto-calculates overdue fines at ₹2/day so students always know what they owe." />
-          <FeatureCard icon="🔍" title="Smart Search"    desc="Admins can search by student name, roll number, or book ID to find any record instantly." />
-          <FeatureCard icon="📊" title="Live Dashboard"  desc="Real-time stats showing total issued, active, due-soon, and overdue counts at a glance." />
+          <FeatureCard icon={BookOpen} title="Book Tracking"   desc="Know exactly which books you have, when they're due, and how many renewals you have left." />
+          <FeatureCard icon={Bell} title="WhatsApp Alerts" desc="Librarians send instant WhatsApp reminders to students with overdue books — no manual effort." />
+          <FeatureCard icon={RefreshCw} title="Easy Renewals"   desc="Renew books in one click. Up to 2 renewals per book, each adding 7 more days." />
+          <FeatureCard icon={DollarSign} title="Fine Calculator" desc="Auto-calculates overdue fines at ₹2/day so students always know what they owe." />
+          <FeatureCard icon={Search} title="Smart Search"    desc="Admins can search by student name, roll number, or book ID to find any record instantly." />
+          <FeatureCard icon={BarChart3} title="Live Dashboard"  desc="Real-time stats showing total issued, active, due-soon, and overdue counts at a glance." />
         </div>
       </section>
 

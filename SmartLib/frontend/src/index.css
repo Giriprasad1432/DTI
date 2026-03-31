@@ -73,7 +73,8 @@
 .arrow-pulse { animation: arrowPulse 2s ease-in-out infinite; }
 .animate-fade-slide-up { animation: fadeSlideUp 0.8s ease forwards; }
 .animate-card-in { animation: cardIn 0.4s ease forwards; }
-.animate-slide-up { animation: slideUp 0.3s ease forwards; }
+.animate-slide-up { animation: slideUp 1.2s ease forwards; }
+.animate-slide-up-fast { animation: slideUp 0.9s ease forwards; }
 .delay-100 { animation-delay: 0.1s; }
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }

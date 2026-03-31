@@ -1,9 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useState } from 'react'
+import { GraduationCap, Key, Menu, X } from 'lucide-react'
 
 export default function Navbar() {
   const { user } = useAuth()
   const { pathname } = useLocation()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Hide navbar completely when logged in — dashboard has its own layout
   if (user) return null
@@ -11,7 +14,7 @@ export default function Navbar() {
   const isActive = (to) => pathname === to
 
   return (
-    <nav className="bg-white/95 backdrop-blur-md border-b border-slate-200 px-8 flex items-center justify-between h-16 sticky top-0 z-50 shadow-sm">
+    <nav className="bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 md:px-8 flex items-center justify-between h-16 sticky top-0 z-50 shadow-sm">
 
       {/* Brand */}
       <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity flex-shrink-0">
@@ -26,25 +29,52 @@ export default function Navbar() {
         </div>
       </Link>
 
-      {/* Nav links */}
-      <div className="flex items-center lg:gap-7 lg:px-10">
+      {/* Desktop Nav links */}
+      <div className="hidden md:flex items-center gap-7">
         <Link to={'/'} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
-              ${isActive('/') ? 'bg-indigo-50 text-indigo-600 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'}`}>Home</Link>
+              ${isActive('/') ? ' bg-indigo-50 text-indigo-600 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'}`}>Home</Link>
         {/* Login buttons */}
       
         <Link to="/login/student"
-          className={`flex items-center gap-1.5 text-sm font-semibold text-emerald-700 border border-emerald-200 shadow-md shadow-emerald-100 px-4 py-2 rounded-lg transition-all
-          ${isActive('/login/student') ? ' bg-emerald-500 text-white': 'hover:bg-emerald-50 hover:border-emerald-400' }`}>
-          <span className="text-base">🎓</span> Student
+          className={`flex items-center gap-1.5 text-sm font-semibold text-slate-500 border  px-4 py-2 rounded-lg transition-all
+          ${isActive('/login/student') ? ' bg-emerald-500 border-2  text-white': 'hover:bg-emerald-50 hover:border-emerald-400' }`}>
+          <GraduationCap className="w-4 h-4" /> Student
         </Link>
         <Link to="/login/admin"
-          className={`flex border border-indigo-300 items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all shadow-md shadow-indigo-200 hover:-translate-y-0.5
-           ${isActive('/login/admin') ? 'bg-indigo-600 text-white': 'text-slate-500 hover:bg-indigo-100 ' }`}>
-          <span className="text-base">🔑</span> Admin
+          className={`flex border  items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-lg transition-all  hover:-translate-y-0.5 hover:border-indigo-400
+           ${isActive('/login/admin') ? 'border-gray-700 bg-indigo-600 text-white shadow-md shadow-indigo-200': 'text-slate-500 hover:bg-indigo-100 ' }`}>
+          <Key className="w-4 h-4" /> Admin
         </Link>
         <Link to={'/about'} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
-              ${isActive('/about') ? 'bg-indigo-50 text-indigo-600 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'}`}>About</Link>
+              ${isActive('/about') ? 'border-gray-700 bg-indigo-50 text-indigo-600 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'}`}>About</Link>
       </div>
+
+      {/* Mobile menu button */}
+      <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-slate-500 hover:text-slate-700">
+        {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="absolute top-16 left-0 right-0 bg-white border-b border-slate-200 shadow-lg md:hidden">
+          <div className="flex flex-col p-4 space-y-2">
+            <Link to={'/'} onClick={() => setMobileMenuOpen(false)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
+                  ${isActive('/') ? ' bg-indigo-50 text-indigo-600 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'}`}>Home</Link>
+            <Link to="/login/student" onClick={() => setMobileMenuOpen(false)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-emerald-700 border border-emerald-200 shadow-md shadow-emerald-100 transition-all
+              ${isActive('/login/student') ? ' bg-emerald-500 border-2 border-gray-700 text-white': 'hover:bg-emerald-50 hover:border-emerald-400' }`}>
+              <GraduationCap className="w-4 h-4" /> Student Login
+            </Link>
+            <Link to="/login/admin" onClick={() => setMobileMenuOpen(false)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold border border-indigo-300 shadow-md shadow-indigo-200 transition-all hover:-translate-y-0.5
+               ${isActive('/login/admin') ? 'border-gray-700 bg-indigo-600 text-white': 'text-slate-500 hover:bg-indigo-100 ' }`}>
+              <Key className="w-4 h-4" /> Admin Login
+            </Link>
+            <Link to={'/about'} onClick={() => setMobileMenuOpen(false)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
+                  ${isActive('/about') ? 'border-gray-700 bg-indigo-50 text-indigo-600 font-semibold' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800'}`}>About</Link>
+          </div>
+        </div>
+      )}
     </nav>
   )
 }

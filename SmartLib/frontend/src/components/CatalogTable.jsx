@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCatalog } from '../hooks/useCatalog'
+import { BookOpen } from 'lucide-react'
 
 export default function CatalogTable({ search, page = 1, onPageChange }) {
   const { catalog, loading, error, total, totalPages, reload } = useCatalog({ search, page })
@@ -16,7 +17,7 @@ export default function CatalogTable({ search, page = 1, onPageChange }) {
 
       {!loading && !error && catalog.length === 0 && (
         <div className="text-center py-16 text-slate-400">
-          <div className="text-4xl mb-3">📚</div>
+          <BookOpen className="w-12 h-12 mb-3 mx-auto text-slate-300" />
           <div className="text-sm">No books found in catalog</div>
         </div>
       )}

@@ -1,6 +1,7 @@
 import { useAuth } from '../context/AuthContext'
 import { useBooks } from '../hooks/useBooks'
 import BookRow from './BookRow'
+import { BookOpen, AlertTriangle } from 'lucide-react'
 
 export default function BooksTable({ search, refreshKey }) {
   const { user } = useAuth()
@@ -9,13 +10,13 @@ export default function BooksTable({ search, refreshKey }) {
   })
   const overdueCount = books.filter(b => b.status === 'overdue').length
   const title = user.role === 'admin'
-    ? (overdueCount > 0 ? `⚠ ${overdueCount} Overdue · ` : '') + 'All Issued Books'
+    ? (overdueCount > 0 ? <><AlertTriangle className="w-4 h-4 inline" /> {overdueCount} Overdue · </> : '') + 'All Issued Books'
     : 'My Borrowed Books'
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
       <div className="px-7 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
-        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{title}</span>
+        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide flex items-center gap-1">{title}</span>
         <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">{books.length} Records</span>
       </div>
 
@@ -24,7 +25,7 @@ export default function BooksTable({ search, refreshKey }) {
 
       {!loading && !error && books.length === 0 && (
         <div className="text-center py-16 text-slate-400">
-          <div className="text-4xl mb-3">📚</div>
+          <BookOpen className="w-12 h-12 mb-3 mx-auto text-slate-300" />
           <div className="text-sm">No books found</div>
         </div>
       )}

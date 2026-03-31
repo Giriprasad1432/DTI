@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { loginAdmin } from '../api/books'
+import { BarChart3, ClipboardList, Search, Smartphone, DollarSign, RefreshCw, AlertTriangle } from 'lucide-react'
 
 export default function AdminLoginPage() {
   const { login } = useAuth()
@@ -60,13 +61,13 @@ export default function AdminLoginPage() {
   const inp = "w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400"
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6"
+    <div className="min-h-screen md:min-h-[80vh] flex items-center justify-center p-6 py-12 md:py-6"
       style={{ background: 'radial-gradient(ellipse at 30% 40%, rgba(79,70,229,0.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 80%, rgba(99,102,241,0.05) 0%, transparent 60%), #f8fafc' }}>
 
-      <div className="w-full max-w-md">
+      <div className="w-full">
 
         {/* Card */}
-        <div className="bg-white border border-slate-200 rounded-3xl p-10 shadow-2xl shadow-slate-200/60">
+        <div className="max-w-md mx-auto bg-white border border-slate-200 rounded-3xl p-10 shadow-2xl shadow-slate-200/60 opacity-0 animate-slide-up-fast delay-100">
 
           {/* Back */}
           <Link to="/" className="inline-flex items-center gap-1.5 text-slate-400 text-xs hover:text-slate-600 transition-colors mb-7">
@@ -103,7 +104,7 @@ export default function AdminLoginPage() {
             </div>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl flex items-start gap-2">
-                ⚠ {error}
+                <AlertTriangle className="w-4 h-4 flex-shrink-0" /> {error}
               </div>
             )}
             <button type="submit" disabled={loading}
@@ -126,17 +127,28 @@ export default function AdminLoginPage() {
         </div>
 
         {/* Info panel — below the card */}
-        <div className="mt-5 bg-indigo-600 rounded-2xl p-6 text-white">
-          <div className="text-sm font-bold mb-3 text-indigo-100 uppercase tracking-widest">Admin capabilities</div>
-          <div className="grid grid-cols-2 gap-3">
-            {[['📊','Live dashboard'],['📋','Issue books'],['🔍','Search records'],['📱','WhatsApp alerts'],['💰','Fine calculator'],['🔄','Renew & return']].map(([icon, label]) => (
-              <div key={label} className="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2.5">
-                <span className="text-lg">{icon}</span>
-                <span className="text-xs font-medium text-indigo-100">{label}</span>
+        {/* <div className="mt-8">
+          <div className="text-center mb-6">
+            <div className="text-sm font-bold text-slate-600 uppercase tracking-widest mb-2">Admin capabilities</div>
+            <div className="w-12 h-1 bg-indigo-500 rounded-full mx-auto"></div>
+          </div>
+          <div className="flex flex-row flex-wrap gap-4 justify-center w-full">
+            {[
+              [BarChart3, 'Live', 'dashboard'],
+              [ClipboardList, 'Issue', 'books'],
+              [Search, 'Search', 'records'],
+              [Smartphone, 'WhatsApp', 'alerts'],
+              [DollarSign, 'Fine', 'calculator'],
+              [RefreshCw, 'Renew', '& return']
+            ].map(([Icon, val, label]) => (
+              <div key={label} className="bg-white/[0.8] backdrop-blur-md border border-slate-200/50 rounded-2xl px-5 py-4 text-center hover:-translate-y-1 hover:bg-white hover:border-indigo-300/50 transition-all shadow-md hover:shadow-lg flex-1 min-w-0">
+                <Icon className="w-6 h-6 mb-2 mx-auto text-indigo-600" />
+                <div className="text-lg font-extrabold text-slate-800 tracking-tight">{val}</div>
+                <div className="text-xs text-slate-500 uppercase tracking-wide">{label}</div>
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
       </div>
     </div>
