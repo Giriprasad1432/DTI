@@ -39,6 +39,9 @@ app.use('/api', BookRoutes);
 app.use('/api/auth', AuthRoutes);
 app.use('/api/notifications', NotificationRoutes);
 
+// Health Check Endpoint (Non-DB)
+app.get('/health', (req, res) => res.status(200).json({ status: 'ok', uptime: process.uptime() }));
+
 // ── PRODUCTION: Serve Frontend Static Files ──
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,7 +50,10 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Catch-all route for SPA (React) — ignore /api routes
-app.get(/^(?!\/api).*/, (req, res) => {
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
   res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'), (err) => {
     if (err) {
       res.status(200).send('SmartLib Backend is running. Please build the frontend to view the UI.');
