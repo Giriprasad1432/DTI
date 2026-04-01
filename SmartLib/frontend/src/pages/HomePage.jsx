@@ -33,10 +33,10 @@ export default function HomePage() {
       {/* ── HERO ── */}
       <section className="min-h-screen bg-[#0f0f23] relative flex items-center px-6 md:px-16 py-20 gap-16">
 
-        {/* Library background image */}
+        {/* Library background image (Optimized WebP) */}
         <div className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: 'url(./lib.png)',
+            backgroundImage: 'url(./lib.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
