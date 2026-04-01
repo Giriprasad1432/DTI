@@ -49,11 +49,13 @@ const __dirname = path.dirname(__filename);
 // Serve frontend build if it exists
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
-// Catch-all route for SPA (React) — ignore /api routes
-app.get('/:slug*', (req, res) => {
+// Catch-all route for SPA (React) — serves index.html for any non-API routes
+app.use((req, res, next) => {
+  // If it's an API request, let it fall through to 404 (if not handled above)
   if (req.path.startsWith('/api')) {
-    return res.status(404).json({ error: 'API endpoint not found' });
+    return next();
   }
+  // Otherwise, serve the React app
   res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'), (err) => {
     if (err) {
       res.status(200).send('SmartLib Backend is running. Please build the frontend to view the UI.');
