@@ -25,9 +25,11 @@ app.use(cors({
     "http://localhost:3000", "http://127.0.0.1:3000",
     "http://localhost:3001", "http://127.0.0.1:3001",
     "http://localhost:5173", "http://127.0.0.1:5173",
-    "http://localhost:5000", "http://127.0.0.1:5000"
+    "http://localhost:5000", "http://127.0.0.1:5000",
+    "https://dti-j286.onrender.com"
   ],
-  methods: ["POST", "GET", "PUT", "DELETE"]
+  methods: ["POST", "GET", "PUT", "DELETE"],
+  credentials: true
 }));
 
 // API Routes
@@ -44,16 +46,11 @@ const __dirname = path.dirname(__filename);
 // Serve frontend build if it exists
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
-// Catch-all route for SPA (React)
-app.get(/.*/, (req, res) => {
+// Catch-all route for SPA (React) — ignore /api routes
+app.get(/^(?!\/api).*/, (req, res) => {
   res.sendFile(path.resolve(__dirname, '../frontend', 'dist', 'index.html'), (err) => {
     if (err) {
-      // If index.html doesn't exist, provide a simple status message for the API
-      if (req.path.startsWith('/api')) {
-          res.status(404).json({ error: 'API endpoint not found' });
-      } else {
-          res.status(200).send('SmartLib Backend is running. Please build the frontend to view the UI.');
-      }
+      res.status(200).send('SmartLib Backend is running. Please build the frontend to view the UI.');
     }
   });
 });
