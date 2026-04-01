@@ -50,7 +50,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Catch-all route for SPA (React) — ignore /api routes
-app.get('*', (req, res) => {
+app.get('/(.*)', (req, res) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ error: 'API endpoint not found' });
   }
